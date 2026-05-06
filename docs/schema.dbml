@@ -1,0 +1,62 @@
+Table users {
+  id integer [primary key]
+  username varchar
+  password varchar
+}
+
+Table movies {
+  id integer [primary key]
+  title varchar
+  description varchar
+  required_age integer
+  duration_minutes integer
+}
+
+Table rooms {
+  id integer [primary key]
+  name varchar
+}
+
+Table seats {
+  id integer [primary key]
+  room_id integer
+  row integer
+  number integer
+}
+
+Table screening {
+  id integer [primary key]
+  movie_id integer
+  room_id integer
+  start_time datetime
+}
+
+Table reservations {
+  id integer [primary key]
+  user_id integer
+  screening_id integer
+  seat_id integer
+  status ReservationStatus
+
+  Indexes {
+    (screening_id, seat_id) // unique
+  }
+}
+
+Enum ReservationStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+Ref: "users"."id" < "reservations"."user_id"
+
+Ref: "screening"."id" < "reservations"."screening_id"
+
+Ref: "movies"."id" < "screening"."movie_id"
+
+Ref: "rooms"."id" < "screening"."room_id"
+
+Ref: "rooms"."id" < "seats"."room_id"
+
+Ref: "seats"."id" < "reservations"."seat_id"
