@@ -22,6 +22,10 @@ Table seats {
   room_id integer
   row integer
   number integer
+
+  Indexes {
+      (room_id, row, number) [unique]
+  }
 }
 
 Table screening {
