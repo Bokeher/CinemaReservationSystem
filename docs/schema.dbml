@@ -28,7 +28,7 @@ Table seats {
   }
 }
 
-Table screening {
+Table screenings {
   id integer [primary key]
   movie_id integer
   room_id integer
