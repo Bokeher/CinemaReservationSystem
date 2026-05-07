@@ -38,9 +38,7 @@ Table reservations {
   seat_id integer
   status ReservationStatus
 
-  Indexes {
-    (screening_id, seat_id) // unique
-  }
+  // There should be only one CONFIRMED reservation with the same seat_id and screening_id
 }
 
 Enum ReservationStatus {
