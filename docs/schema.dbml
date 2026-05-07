@@ -1,6 +1,6 @@
 Table users {
   id integer [primary key]
-  username varchar
+  username varchar [unique]
   password varchar
 }
 
