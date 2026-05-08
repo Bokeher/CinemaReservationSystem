@@ -1,27 +1,27 @@
 Table users {
   id integer [primary key]
-  username varchar [unique]
-  password varchar
+  username varchar [unique, not null]
+  password varchar [not null]
 }
 
 Table movies {
   id integer [primary key]
-  title varchar
+  title varchar [not null]
   description varchar
-  required_age integer
-  duration_minutes integer
+  required_age integer [not null]
+  duration_minutes integer [not null]
 }
 
 Table rooms {
   id integer [primary key]
-  name varchar
+  name varchar [not null]
 }
 
 Table seats {
   id integer [primary key]
-  room_id integer
-  row integer
-  number integer
+  room_id integer [not null]
+  row integer [not null]
+  number integer [not null]
 
   Indexes {
       (room_id, row, number) [unique]
@@ -30,17 +30,17 @@ Table seats {
 
 Table screenings {
   id integer [primary key]
-  movie_id integer
-  room_id integer
-  start_time datetime
+  movie_id integer [not null]
+  room_id integer [not null]
+  start_time datetime [not null]
 }
 
 Table reservations {
   id integer [primary key]
-  user_id integer
-  screening_id integer
-  seat_id integer
-  status ReservationStatus
+  user_id integer [not null]
+  screening_id integer [not null]
+  seat_id integer [not null]
+  status ReservationStatus [not null]
 
   // There should be only one CONFIRMED reservation with the same seat_id and screening_id
 }
