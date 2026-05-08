@@ -52,11 +52,11 @@ Enum ReservationStatus {
 
 Ref: "users"."id" < "reservations"."user_id"
 
-Ref: "screening"."id" < "reservations"."screening_id"
+Ref: "screenings"."id" < "reservations"."screening_id"
 
-Ref: "movies"."id" < "screening"."movie_id"
+Ref: "movies"."id" < "screenings"."movie_id"
 
-Ref: "rooms"."id" < "screening"."room_id"
+Ref: "rooms"."id" < "screenings"."room_id"
 
 Ref: "rooms"."id" < "seats"."room_id"
 
