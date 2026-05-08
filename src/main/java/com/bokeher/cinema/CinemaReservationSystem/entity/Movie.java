@@ -21,13 +21,15 @@ public class Movie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
     private String description;
 
+    @Column(nullable = false)
     private int requiredAge;
 
     @Convert(converter = DurationToMinutesConverter.class)
-    @Column(name = "duration_minutes")
+    @Column(name = "duration_minutes", nullable = false)
     private Duration duration;
 }
