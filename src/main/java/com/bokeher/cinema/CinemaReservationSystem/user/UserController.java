@@ -1,5 +1,7 @@
 package com.bokeher.cinema.CinemaReservationSystem.user;
 
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.RegisterUserRequest;
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public User create(@RequestBody User user) {
-        return userService.register(user);
+    public UserResponse createUser(@RequestBody RegisterUserRequest registerUserRequest) {
+        return userService.register(registerUserRequest);
     }
 
     @GetMapping("/{id}")
