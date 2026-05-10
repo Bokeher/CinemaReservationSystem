@@ -2,18 +2,16 @@ package com.bokeher.cinema.CinemaReservationSystem.controller;
 
 import com.bokeher.cinema.CinemaReservationSystem.entity.User;
 import com.bokeher.cinema.CinemaReservationSystem.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @PostMapping
     public User create(@RequestBody User user) {
