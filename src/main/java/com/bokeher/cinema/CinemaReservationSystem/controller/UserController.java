@@ -20,6 +20,13 @@ public class UserController {
         return userService.register(user);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getById(@PathVariable long id) {
+        return userService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping
     public ResponseEntity<User> getByUsername(@RequestParam String username) {
         return userService.findByUsername(username)
