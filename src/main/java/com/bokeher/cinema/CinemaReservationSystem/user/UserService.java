@@ -2,7 +2,9 @@ package com.bokeher.cinema.CinemaReservationSystem.user;
 
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
+import com.bokeher.cinema.CinemaReservationSystem.user.exception.EmailAlreadyExistsException;
 import com.bokeher.cinema.CinemaReservationSystem.user.exception.UserNotFoundException;
+import com.bokeher.cinema.CinemaReservationSystem.user.exception.UsernameAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,14 @@ public class UserService {
 
     public UserResponse register(RegisterUserRequest request) {
         User user = userMapper.toEntity(request);
+
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new UsernameAlreadyExistsException(user.getUsername());
+        }
+
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new EmailAlreadyExistsException(user.getEmail());
+        }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
         user.setPassword(encodedPassword);
