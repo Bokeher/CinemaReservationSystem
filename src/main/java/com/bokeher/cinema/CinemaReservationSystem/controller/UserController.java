@@ -20,8 +20,8 @@ public class UserController {
         return userService.register(user);
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<User> getByUsername(@PathVariable String username) {
+    @GetMapping
+    public ResponseEntity<User> getByUsername(@RequestParam String username) {
         return userService.findByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
