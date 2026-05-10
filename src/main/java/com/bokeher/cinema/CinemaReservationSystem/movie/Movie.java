@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem.entity;
+package com.bokeher.cinema.CinemaReservationSystem.movie;
 
 import com.bokeher.cinema.CinemaReservationSystem.converter.DurationToMinutesConverter;
 import jakarta.persistence.*;

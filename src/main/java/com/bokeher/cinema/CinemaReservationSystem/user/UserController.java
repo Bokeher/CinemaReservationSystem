@@ -1,7 +1,5 @@
-package com.bokeher.cinema.CinemaReservationSystem.controller;
+package com.bokeher.cinema.CinemaReservationSystem.user;
 
-import com.bokeher.cinema.CinemaReservationSystem.entity.User;
-import com.bokeher.cinema.CinemaReservationSystem.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

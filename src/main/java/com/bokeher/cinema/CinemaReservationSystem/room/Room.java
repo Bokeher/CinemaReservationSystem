@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem.entity;
+package com.bokeher.cinema.CinemaReservationSystem.room;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

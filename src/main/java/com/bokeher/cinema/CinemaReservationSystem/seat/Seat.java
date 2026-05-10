@@ -1,5 +1,6 @@
-package com.bokeher.cinema.CinemaReservationSystem.entity;
+package com.bokeher.cinema.CinemaReservationSystem.seat;
 
+import com.bokeher.cinema.CinemaReservationSystem.room.Room;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

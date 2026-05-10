@@ -1,7 +1,5 @@
-package com.bokeher.cinema.CinemaReservationSystem.service;
+package com.bokeher.cinema.CinemaReservationSystem.user;
 
-import com.bokeher.cinema.CinemaReservationSystem.entity.User;
-import com.bokeher.cinema.CinemaReservationSystem.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

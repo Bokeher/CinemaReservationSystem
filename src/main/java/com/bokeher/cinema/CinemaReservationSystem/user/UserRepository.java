@@ -1,6 +1,5 @@
-package com.bokeher.cinema.CinemaReservationSystem.repository;
+package com.bokeher.cinema.CinemaReservationSystem.user;
 
-import com.bokeher.cinema.CinemaReservationSystem.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
