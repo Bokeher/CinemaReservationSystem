@@ -1,7 +1,14 @@
 Table users {
   id integer [primary key]
   username varchar [unique, not null]
+  email varchar [unique, not null]
   password varchar [not null]
+  role UserRole [not null]
+}
+
+Enum UserRole {
+    USER
+    ADMIN
 }
 
 Table movies {
