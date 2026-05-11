@@ -1,5 +1,6 @@
 package com.bokeher.cinema.CinemaReservationSystem.user;
 
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,11 @@ public class UserController {
     @PostMapping
     public UserResponse createUser(@RequestBody RegisterUserRequest registerUserRequest) {
         return userService.register(registerUserRequest);
+    }
+
+    @PostMapping("/login")
+    public UserResponse login(@RequestBody LoginUserRequest loginUserRequest) {
+        return userService.login(loginUserRequest);
     }
 
     @GetMapping("/{id}")

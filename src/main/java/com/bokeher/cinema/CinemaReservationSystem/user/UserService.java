@@ -1,8 +1,10 @@
 package com.bokeher.cinema.CinemaReservationSystem.user;
 
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import com.bokeher.cinema.CinemaReservationSystem.user.exception.EmailAlreadyExistsException;
+import com.bokeher.cinema.CinemaReservationSystem.user.exception.InvalidCredentialsException;
 import com.bokeher.cinema.CinemaReservationSystem.user.exception.UserNotFoundException;
 import com.bokeher.cinema.CinemaReservationSystem.user.exception.UsernameAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,17 @@ public class UserService {
         User savedUser = userRepository.save(user);
 
         return userMapper.toResponse(savedUser);
+    }
+
+    public UserResponse login(LoginUserRequest request) {
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new InvalidCredentialsException();
+        }
+
+        return userMapper.toResponse(user);
     }
 
     public UserResponse findById(long id) {
