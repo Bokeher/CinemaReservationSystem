@@ -1,16 +1,17 @@
 info:
-  name: login
+  name: register
   type: http
-  seq: 4
+  seq: 1
 
 http:
   method: POST
-  url: http://localhost:8080/users/login
+  url: http://localhost:8080/auth/register
   body:
     type: json
     data: |-
       {
         "username": "test",
+        "email": "ab@b.com",
         "password": "123"
       }
   auth: inherit

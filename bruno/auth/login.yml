@@ -1,17 +1,16 @@
 info:
-  name: create-user
+  name: login
   type: http
-  seq: 3
+  seq: 2
 
 http:
   method: POST
-  url: http://localhost:8080/users
+  url: http://localhost:8080/auth/login
   body:
     type: json
     data: |-
       {
         "username": "test",
-        "email": "ab@b.com",
         "password": "123"
       }
   auth: inherit
