@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem.user.dto;
+package com.bokeher.cinema.CinemaReservationSystem.auth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

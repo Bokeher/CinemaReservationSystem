@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem;
+package com.bokeher.cinema.CinemaReservationSystem.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
