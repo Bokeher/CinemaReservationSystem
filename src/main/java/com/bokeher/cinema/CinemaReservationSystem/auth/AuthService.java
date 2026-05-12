@@ -19,11 +19,12 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AuthMapper authMapper;
+    private final UserMapper userMapper;
 
     public UserResponse register(RegisterUserRequest request) {
-        User user = userMapper.toEntity(request);
+        User user = authMapper.toEntity(request);
 
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new UsernameAlreadyExistsException(user.getUsername());
@@ -40,7 +41,7 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        return userMapper.toResponse(user);
+        return userMapper.toResponse(savedUser);
     }
 
     public UserResponse login(LoginUserRequest request) {

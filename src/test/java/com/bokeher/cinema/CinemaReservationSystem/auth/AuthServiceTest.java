@@ -44,7 +44,7 @@ class AuthServiceTest {
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(userRepository, new UserMapper(), passwordEncoder);
+        authService = new AuthService(userRepository, passwordEncoder, new AuthMapper(), new UserMapper());
     }
 
     @Test
