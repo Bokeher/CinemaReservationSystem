@@ -1,5 +1,6 @@
 package com.bokeher.cinema.CinemaReservationSystem.auth;
 
+import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.exception.EmailAlreadyExistsException;
 import com.bokeher.cinema.CinemaReservationSystem.auth.exception.UsernameAlreadyExistsException;
@@ -7,7 +8,6 @@ import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserMapper;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
-import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,6 +33,7 @@ class AuthServiceTest {
     private static final String EMAIL = "john@example.com";
     private static final String PASSWORD = "password";
     private static final String ENCODED_PASSWORD = "encoded";
+    private static final String TOKEN = "token";
 
     @Mock
     private UserRepository userRepository;
@@ -40,11 +41,20 @@ class AuthServiceTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private JwtService jwtService;
+
     private AuthService authService;
 
     @BeforeEach
     void setUp() {
-        authService = new AuthService(userRepository, passwordEncoder, new AuthMapper(), new UserMapper());
+        authService = new AuthService(
+                userRepository,
+                passwordEncoder,
+                new AuthMapper(),
+                new UserMapper(),
+                jwtService
+        );
     }
 
     @Test
@@ -56,18 +66,21 @@ class AuthServiceTest {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
         when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
+        when(jwtService.generateToken(any())).thenReturn(TOKEN);
 
-        UserResponse result = authService.register(request);
+        AuthResponse result = authService.register(request);
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
         assertAll(
-                () -> assertEquals(USERNAME, result.getUsername()),
-                () -> assertEquals(EMAIL, result.getEmail()),
-                () -> assertEquals(UserRole.USER, result.getRole())
+                () -> assertEquals(USERNAME, result.getUser().getUsername()),
+                () -> assertEquals(EMAIL, result.getUser().getEmail()),
+                () -> assertEquals(UserRole.USER, result.getUser().getRole()),
+                () -> assertEquals(TOKEN, result.getToken())
         );
 
         verify(userRepository).save(userCaptor.capture());
+        verify(jwtService).generateToken(any());
 
         User persistedUser = userCaptor.getValue();
         assertAll(

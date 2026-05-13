@@ -1,8 +1,8 @@
 package com.bokeher.cinema.CinemaReservationSystem.auth;
 
+import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
-import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,13 +17,13 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public UserResponse createUser(@RequestBody RegisterUserRequest registerUserRequest) {
+    public AuthResponse createUser(@RequestBody RegisterUserRequest registerUserRequest) {
         return authService.register(registerUserRequest);
     }
 
 
     @PostMapping("/login")
-    public UserResponse login(@RequestBody LoginUserRequest loginUserRequest) {
+    public AuthResponse login(@RequestBody LoginUserRequest loginUserRequest) {
         return authService.login(loginUserRequest);
     }
 
