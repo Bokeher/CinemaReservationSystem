@@ -13,6 +13,12 @@ config:
         username: ""
         password: ""
       bypassProxy: ""
+
+request:
+  headers:
+    - name: Authorization
+      value: Bearer {{jwt}}
+      disabled: true
 bundled: false
 extensions:
   bruno:

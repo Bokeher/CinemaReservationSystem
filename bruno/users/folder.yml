@@ -4,4 +4,7 @@ info:
   seq: 2
 
 request:
+  headers:
+    - name: Authorization
+      value: Bearer {{jwt}}
   auth: inherit
