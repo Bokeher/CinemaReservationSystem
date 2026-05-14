@@ -1,6 +1,7 @@
 package com.bokeher.cinema.CinemaReservationSystem.auth;
 
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
+import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.exception.EmailAlreadyExistsException;
 import com.bokeher.cinema.CinemaReservationSystem.auth.exception.UsernameAlreadyExistsException;
@@ -15,6 +16,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,8 +61,32 @@ class AuthServiceTest {
     }
 
     @Test
+    void shouldLoginSuccessfully() {
+        LoginUserRequest request = getLoginRequest();
+        User user = getSavedUser();
+
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(true);
+        when(jwtService.generateToken(any(UserPrincipal.class))).thenReturn(TOKEN);
+
+        AuthResponse response = authService.login(request);
+
+        assertAll(
+                () -> assertEquals(USERNAME, response.getUser().getUsername()),
+                () -> assertEquals(EMAIL, response.getUser().getEmail()),
+                () -> assertEquals(UserRole.USER, response.getUser().getRole()),
+                () -> assertEquals(TOKEN, response.getToken())
+        );
+
+        verify(userRepository).findByUsername(USERNAME);
+        verify(passwordEncoder).matches(PASSWORD, ENCODED_PASSWORD);
+        verify(jwtService).generateToken(any(UserPrincipal.class));
+
+    }
+
+    @Test
     void shouldRegisterUserSuccessfully() {
-        RegisterUserRequest request = getRequest();
+        RegisterUserRequest request = getRegisterRequest();
         User savedUser = getSavedUser();
 
         when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
@@ -93,7 +120,7 @@ class AuthServiceTest {
 
     @Test
     void shouldThrowWhenUsernameAlreadyExists() {
-        RegisterUserRequest request = getRequest();
+        RegisterUserRequest request = getRegisterRequest();
 
         when(userRepository.existsByUsername(USERNAME)).thenReturn(true);
 
@@ -111,7 +138,7 @@ class AuthServiceTest {
 
     @Test
     void shouldThrowWhenEmailAlreadyExists() {
-        RegisterUserRequest request = getRequest();
+        RegisterUserRequest request = getRegisterRequest();
 
         when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
         when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
@@ -130,7 +157,7 @@ class AuthServiceTest {
 
     @Test
     void shouldEncodePasswordBeforeSavingUser() {
-        RegisterUserRequest request = getRequest();
+        RegisterUserRequest request = getRegisterRequest();
         User savedUser = getSavedUser();
 
         when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
@@ -146,10 +173,17 @@ class AuthServiceTest {
         ));
     }
 
-    private RegisterUserRequest getRequest() {
+    private RegisterUserRequest getRegisterRequest() {
         return RegisterUserRequest.builder()
                 .username(USERNAME)
                 .email(EMAIL)
+                .password(PASSWORD)
+                .build();
+    }
+
+    private LoginUserRequest getLoginRequest() {
+        return LoginUserRequest.builder()
+                .username(USERNAME)
                 .password(PASSWORD)
                 .build();
     }
