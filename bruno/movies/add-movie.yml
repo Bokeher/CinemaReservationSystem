@@ -1,0 +1,24 @@
+info:
+  name: add-movie
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8080/movies
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Shrek",
+        "description": "An ogre named Shrek embarks on a journey to rescue Princess Fiona and reclaim his swamp.",
+        "requiredAge": 7,
+        "durationMinutes": 90
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

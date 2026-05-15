@@ -1,0 +1,10 @@
+info:
+  name: movies
+  type: folder
+  seq: 3
+
+request:
+  headers:
+    - name: Authorization
+      value: Bearer {{jwt}}
+  auth: inherit
