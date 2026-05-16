@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/movies?title=shrek
+  url: "{{baseUrl}}/movies?title=shrek"
   params:
     - name: title
       value: shrek

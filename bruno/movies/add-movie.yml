@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:8080/movies
+  url: "{{baseUrl}}/movies"
   body:
     type: json
     data: |-
