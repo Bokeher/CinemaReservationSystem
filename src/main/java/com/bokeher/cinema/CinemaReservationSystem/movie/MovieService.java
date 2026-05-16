@@ -2,6 +2,7 @@ package com.bokeher.cinema.CinemaReservationSystem.movie;
 
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.CreateMovieRequest;
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.MovieResponse;
+import com.bokeher.cinema.CinemaReservationSystem.movie.dto.UpdateMovieRequest;
 import com.bokeher.cinema.CinemaReservationSystem.movie.exception.MovieNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,23 @@ public class MovieService {
         }
 
         return findByTitleIgnoreCase(title);
+    }
+
+    public void deleteMovie(Long id) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoundException(id));
+
+        movieRepository.delete(movie);
+    }
+
+    public MovieResponse updateMovie(Long id, UpdateMovieRequest request) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoundException(id));
+
+        movieMapper.update(movie, request);
+
+        Movie savedMovie = movieRepository.save(movie);
+
+        return movieMapper.toResponse(savedMovie);
     }
 }

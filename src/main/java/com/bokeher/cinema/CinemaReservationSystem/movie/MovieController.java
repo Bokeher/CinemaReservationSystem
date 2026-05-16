@@ -2,7 +2,9 @@ package com.bokeher.cinema.CinemaReservationSystem.movie;
 
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.CreateMovieRequest;
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.MovieResponse;
+import com.bokeher.cinema.CinemaReservationSystem.movie.dto.UpdateMovieRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,4 +30,16 @@ public class MovieController {
     public MovieResponse createMovie(@RequestBody CreateMovieRequest request) {
         return movieService.createMovie(request);
     }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMovie(@PathVariable Long id) {
+        movieService.deleteMovie(id);
+    }
+
+    @PutMapping("/{id}")
+    public MovieResponse updateMovie(@PathVariable Long id, @RequestBody UpdateMovieRequest request) {
+        return movieService.updateMovie(id, request);
+    }
+
 }
