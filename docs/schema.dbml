@@ -13,7 +13,7 @@ Enum UserRole {
 
 Table movies {
   id integer [primary key]
-  title varchar [not null]
+  title varchar [unique, not null]
   description varchar
   required_age integer [not null]
   duration_minutes integer [not null]
