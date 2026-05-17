@@ -29,7 +29,7 @@ public class AdminMovieController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public MovieResponse updateMovie(@PathVariable Long id, @RequestBody UpdateMovieRequest request) {
         return movieService.updateMovie(id, request);
     }

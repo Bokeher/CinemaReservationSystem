@@ -31,9 +31,20 @@ public class MovieMapper {
     }
 
     public void update(Movie movie, UpdateMovieRequest request) {
-        movie.setTitle(request.getTitle());
-        movie.setDescription(request.getDescription());
-        movie.setRequiredAge(request.getRequiredAge());
-        movie.setDuration(Duration.ofMinutes(request.getDurationMinutes()));
+        if (request.getTitle() != null) {
+            movie.setTitle(request.getTitle());
+        }
+
+        if (request.getDescription() != null) {
+            movie.setDescription(request.getDescription());
+        }
+
+        if (request.getRequiredAge() != null) {
+            movie.setRequiredAge(request.getRequiredAge());
+        }
+
+        if (request.getDurationMinutes() != null) {
+            movie.setDuration(Duration.ofMinutes(request.getDurationMinutes()));
+        }
     }
 }
