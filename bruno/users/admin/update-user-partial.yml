@@ -1,17 +1,16 @@
 info:
-  name: login-admin
+  name: update-user-partial
   type: http
-  seq: 3
+  seq: 5
 
 http:
-  method: POST
-  url: "{{baseUrl}}/auth/login"
+  method: PATCH
+  url: "{{baseUrl}}/admin/users/5"
   body:
     type: json
     data: |-
       {
-        "username": "admin",
-        "password": "admin"
+        "username": "user5"
       }
   auth: inherit
 

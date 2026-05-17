@@ -1,5 +1,5 @@
 info:
-  name: delete-movie
+  name: delete-user
   type: http
   seq: 3
 
