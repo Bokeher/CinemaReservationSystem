@@ -1,16 +1,16 @@
 info:
-  name: add-movie
+  name: update-movie
   type: http
   seq: 3
 
 http:
-  method: POST
-  url: "{{baseUrl}}/movies"
+  method: PUT
+  url: "{{baseUrl}}/admin/movies/1"
   body:
     type: json
     data: |-
       {
-        "title": "Shrek",
+        "title": "Shrek 2",
         "description": "An ogre named Shrek embarks on a journey to rescue Princess Fiona and reclaim his swamp.",
         "requiredAge": 7,
         "durationMinutes": 90

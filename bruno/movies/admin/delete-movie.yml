@@ -1,11 +1,11 @@
 info:
   name: delete-movie
   type: http
-  seq: 5
+  seq: 4
 
 http:
   method: DELETE
-  url: "{{baseUrl}}/movies/1"
+  url: "{{baseUrl}}/admin/movies/1"
   auth: inherit
 
 settings:
