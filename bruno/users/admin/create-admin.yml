@@ -1,0 +1,24 @@
+info:
+  name: create-admin
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/admin/users"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "admin",
+        "email": "admin@b.com",
+        "password": "admin",
+        "role": "ADMIN"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

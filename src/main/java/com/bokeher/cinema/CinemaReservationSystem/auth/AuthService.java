@@ -1,15 +1,10 @@
 package com.bokeher.cinema.CinemaReservationSystem.auth;
 
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
-import com.bokeher.cinema.CinemaReservationSystem.user.User;
-import com.bokeher.cinema.CinemaReservationSystem.user.UserMapper;
-import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
-import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
+import com.bokeher.cinema.CinemaReservationSystem.user.*;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
-import com.bokeher.cinema.CinemaReservationSystem.auth.exception.EmailAlreadyExistsException;
 import com.bokeher.cinema.CinemaReservationSystem.auth.exception.InvalidCredentialsException;
-import com.bokeher.cinema.CinemaReservationSystem.auth.exception.UsernameAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,32 +15,22 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AuthMapper authMapper;
     private final UserMapper userMapper;
     private final JwtService jwtService;
+    private final UserService userService;
 
     public AuthResponse register(RegisterUserRequest request) {
-        User user = authMapper.toEntity(request);
 
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new UsernameAlreadyExistsException(user.getUsername());
-        }
+        User saved = userService.createUserInternal(
+                request.getUsername(),
+                request.getEmail(),
+                request.getPassword(),
+                UserRole.USER
+        );
 
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new EmailAlreadyExistsException(user.getEmail());
-        }
+        String token = jwtService.generateToken(new UserPrincipal(saved));
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        user.setPassword(encodedPassword);
-
-        user.setRole(UserRole.USER);
-
-        User savedUser = userRepository.save(user);
-
-        UserPrincipal userPrincipal = new UserPrincipal(savedUser);
-        String token = jwtService.generateToken(userPrincipal);
-
-        return new AuthResponse(token, userMapper.toResponse(savedUser));
+        return new AuthResponse(token, userMapper.toResponse(saved));
     }
 
     public AuthResponse login(LoginUserRequest request) {

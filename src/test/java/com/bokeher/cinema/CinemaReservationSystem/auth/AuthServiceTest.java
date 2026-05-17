@@ -3,16 +3,15 @@ package com.bokeher.cinema.CinemaReservationSystem.auth;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
-import com.bokeher.cinema.CinemaReservationSystem.auth.exception.EmailAlreadyExistsException;
-import com.bokeher.cinema.CinemaReservationSystem.auth.exception.UsernameAlreadyExistsException;
+import com.bokeher.cinema.CinemaReservationSystem.auth.exception.InvalidCredentialsException;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserMapper;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
+import com.bokeher.cinema.CinemaReservationSystem.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,9 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.argThat;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -47,6 +43,9 @@ class AuthServiceTest {
     @Mock
     private JwtService jwtService;
 
+    @Mock
+    private UserService userService;
+
     private AuthService authService;
 
     @BeforeEach
@@ -54,9 +53,9 @@ class AuthServiceTest {
         authService = new AuthService(
                 userRepository,
                 passwordEncoder,
-                new AuthMapper(),
                 new UserMapper(),
-                jwtService
+                jwtService,
+                userService
         );
     }
 
@@ -85,19 +84,48 @@ class AuthServiceTest {
     }
 
     @Test
+    void shouldThrowWhenUserDoesNotExistDuringLogin() {
+        LoginUserRequest request = getLoginRequest();
+
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.empty());
+
+        InvalidCredentialsException exception = assertThrows(
+                InvalidCredentialsException.class,
+                () -> authService.login(request)
+        );
+
+        assertEquals("Invalid username or password", exception.getMessage());
+        verify(userRepository).findByUsername(USERNAME);
+        verifyNoInteractions(passwordEncoder, jwtService, userService);
+    }
+
+    @Test
+    void shouldThrowWhenPasswordDoesNotMatchDuringLogin() {
+        LoginUserRequest request = getLoginRequest();
+        User user = getSavedUser();
+
+        when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
+        when(passwordEncoder.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(false);
+
+        InvalidCredentialsException exception = assertThrows(
+                InvalidCredentialsException.class,
+                () -> authService.login(request)
+        );
+
+        assertEquals("Invalid username or password", exception.getMessage());
+        verify(userRepository).findByUsername(USERNAME);
+        verify(passwordEncoder).matches(PASSWORD, ENCODED_PASSWORD);
+    }
+
+    @Test
     void shouldRegisterUserSuccessfully() {
         RegisterUserRequest request = getRegisterRequest();
         User savedUser = getSavedUser();
 
-        when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
-        when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
-        when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
-        when(jwtService.generateToken(any())).thenReturn(TOKEN);
+        when(userService.createUserInternal(USERNAME, EMAIL, PASSWORD, UserRole.USER)).thenReturn(savedUser);
+        when(jwtService.generateToken(any(UserPrincipal.class))).thenReturn(TOKEN);
 
         AuthResponse result = authService.register(request);
-
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
         assertAll(
                 () -> assertEquals(USERNAME, result.getUser().getUsername()),
@@ -106,71 +134,8 @@ class AuthServiceTest {
                 () -> assertEquals(TOKEN, result.getToken())
         );
 
-        verify(userRepository).save(userCaptor.capture());
-        verify(jwtService).generateToken(any());
-
-        User persistedUser = userCaptor.getValue();
-        assertAll(
-                () -> assertEquals(USERNAME, persistedUser.getUsername()),
-                () -> assertEquals(EMAIL, persistedUser.getEmail()),
-                () -> assertEquals(ENCODED_PASSWORD, persistedUser.getPassword()),
-                () -> assertEquals(UserRole.USER, persistedUser.getRole())
-        );
-    }
-
-    @Test
-    void shouldThrowWhenUsernameAlreadyExists() {
-        RegisterUserRequest request = getRegisterRequest();
-
-        when(userRepository.existsByUsername(USERNAME)).thenReturn(true);
-
-        UsernameAlreadyExistsException exception = assertThrows(
-                UsernameAlreadyExistsException.class,
-                () -> authService.register(request)
-        );
-
-        assertEquals("Username already exists: " + USERNAME, exception.getMessage());
-        verify(userRepository).existsByUsername(USERNAME);
-        verify(userRepository, never()).existsByEmail(anyString());
-        verify(userRepository, never()).save(any());
-        verifyNoInteractions(passwordEncoder);
-    }
-
-    @Test
-    void shouldThrowWhenEmailAlreadyExists() {
-        RegisterUserRequest request = getRegisterRequest();
-
-        when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
-        when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
-
-        EmailAlreadyExistsException exception = assertThrows(
-                EmailAlreadyExistsException.class,
-                () -> authService.register(request)
-        );
-
-        assertEquals("Email already exists: " + EMAIL, exception.getMessage());
-        verify(userRepository).existsByUsername(USERNAME);
-        verify(userRepository).existsByEmail(EMAIL);
-        verify(userRepository, never()).save(any());
-        verifyNoInteractions(passwordEncoder);
-    }
-
-    @Test
-    void shouldEncodePasswordBeforeSavingUser() {
-        RegisterUserRequest request = getRegisterRequest();
-        User savedUser = getSavedUser();
-
-        when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
-        when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
-        when(passwordEncoder.encode(PASSWORD)).thenReturn(ENCODED_PASSWORD);
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
-
-        authService.register(request);
-
-        verify(passwordEncoder).encode(PASSWORD);
-        verify(userRepository).save(argThat(user ->
-                ENCODED_PASSWORD.equals(user.getPassword())
-        ));
+        verify(userService).createUserInternal(USERNAME, EMAIL, PASSWORD, UserRole.USER);
+        verify(jwtService).generateToken(any(UserPrincipal.class));
     }
 
     private RegisterUserRequest getRegisterRequest() {

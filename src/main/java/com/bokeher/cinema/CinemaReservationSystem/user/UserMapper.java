@@ -1,5 +1,6 @@
 package com.bokeher.cinema.CinemaReservationSystem.user;
 
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.CreateUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import org.springframework.stereotype.Component;
 
@@ -14,4 +15,5 @@ public class UserMapper {
                 user.getRole()
         );
     }
+
 }
