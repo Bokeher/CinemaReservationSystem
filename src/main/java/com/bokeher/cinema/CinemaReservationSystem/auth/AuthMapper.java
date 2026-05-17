@@ -2,17 +2,19 @@ package com.bokeher.cinema.CinemaReservationSystem.auth;
 
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
+import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AuthMapper {
 
-    public User toEntity(RegisterUserRequest registerUserRequest) {
-        User user = new User();
-        user.setUsername(registerUserRequest.getUsername());
-        user.setPassword(registerUserRequest.getPassword());
-        user.setEmail(registerUserRequest.getEmail());
-        return user;
+    public User toEntity(RegisterUserRequest request) {
+        return User.builder()
+                .username(request.getUsername())
+                .password(request.getPassword())
+                .email(request.getEmail())
+                .role(UserRole.USER)
+                .build();
     }
 
 }
