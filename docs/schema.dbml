@@ -53,6 +53,7 @@ Table reservations {
 }
 
 Enum ReservationStatus {
+  PENDING
   CONFIRMED
   CANCELLED
 }
