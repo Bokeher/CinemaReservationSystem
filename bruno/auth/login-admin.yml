@@ -1,17 +1,16 @@
 info:
-  name: register
+  name: login-admin
   type: http
-  seq: 1
+  seq: 3
 
 http:
   method: POST
-  url: "{{baseUrl}}/auth/register"
+  url: "{{baseUrl}}/auth/login"
   body:
     type: json
     data: |-
       {
         "username": "user",
-        "email": "user@ab.com",
         "password": "user"
       }
   auth: inherit

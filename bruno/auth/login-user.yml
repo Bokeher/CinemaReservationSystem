@@ -1,5 +1,5 @@
 info:
-  name: login
+  name: login-user
   type: http
   seq: 2
 
@@ -10,8 +10,8 @@ http:
     type: json
     data: |-
       {
-        "username": "test",
-        "password": "123"
+        "username": "user",
+        "password": "user"
       }
   auth: inherit
 
