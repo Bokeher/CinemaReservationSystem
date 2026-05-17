@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem.converter;
+package com.bokeher.cinema.CinemaReservationSystem.movie;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
