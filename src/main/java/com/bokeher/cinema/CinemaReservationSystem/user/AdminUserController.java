@@ -1,6 +1,7 @@
 package com.bokeher.cinema.CinemaReservationSystem.user;
 
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.CreateUserRequest;
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.UpdateUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,5 +26,11 @@ public class AdminUserController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMovie(@PathVariable Long id) {
         userService.deleteUser(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}")
+    public UserResponse updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+        return userService.updateUser(id, request);
     }
 }

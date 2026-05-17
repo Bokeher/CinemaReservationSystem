@@ -1,6 +1,7 @@
 package com.bokeher.cinema.CinemaReservationSystem.user;
 
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.CreateUserRequest;
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.UpdateUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.exception.EmailAlreadyExistsException;
 import com.bokeher.cinema.CinemaReservationSystem.user.exception.UsernameAlreadyExistsException;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
@@ -69,6 +70,42 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public UserResponse updateUser(Long id, UpdateUserRequest request) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
 
+        if (request.getUsername() != null
+                && !request.getUsername().equals(user.getUsername())
+                && userRepository.existsByUsername(request.getUsername())) {
+
+            throw new UsernameAlreadyExistsException(request.getUsername());
+        }
+
+        if (request.getEmail() != null
+                && !request.getEmail().equals(user.getEmail())
+                && userRepository.existsByEmail(request.getEmail())) {
+
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+
+        if (request.getUsername() != null) {
+            user.setUsername(request.getUsername());
+        }
+
+        if (request.getEmail() != null) {
+            user.setEmail(request.getEmail());
+        }
+
+        if (request.getPassword() != null) {
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+        }
+
+        if (request.getRole() != null) {
+            user.setRole(request.getRole());
+        }
+
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponse(savedUser);
+    }
 
 }
