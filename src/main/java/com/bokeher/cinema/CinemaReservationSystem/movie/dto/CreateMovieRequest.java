@@ -1,16 +1,9 @@
 package com.bokeher.cinema.CinemaReservationSystem.movie.dto;
 
-import lombok.*;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
-@Getter
-@Builder
+@SuperBuilder
 @NoArgsConstructor
-@AllArgsConstructor
-public class CreateMovieRequest {
-
-    private String title;
-    private String description;
-    private Integer requiredAge;
-    private Integer durationMinutes;
-
+public class CreateMovieRequest extends BaseMovieRequest {
 }

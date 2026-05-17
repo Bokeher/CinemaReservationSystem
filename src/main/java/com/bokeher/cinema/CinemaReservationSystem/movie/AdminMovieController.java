@@ -3,6 +3,7 @@ package com.bokeher.cinema.CinemaReservationSystem.movie;
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.CreateMovieRequest;
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.MovieResponse;
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.UpdateMovieRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ public class AdminMovieController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public MovieResponse createMovie(@RequestBody CreateMovieRequest request) {
+    public MovieResponse createMovie(@Valid @RequestBody CreateMovieRequest request) {
         return movieService.createMovie(request);
     }
 
@@ -30,7 +31,7 @@ public class AdminMovieController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public MovieResponse updateMovie(@PathVariable Long id, @RequestBody UpdateMovieRequest request) {
+    public MovieResponse updateMovie(@PathVariable Long id, @Valid @RequestBody UpdateMovieRequest request) {
         return movieService.updateMovie(id, request);
     }
 }
