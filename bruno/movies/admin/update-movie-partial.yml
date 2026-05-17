@@ -1,0 +1,21 @@
+info:
+  name: update-movie-partial
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/admin/movies/2"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Shrek 3"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
