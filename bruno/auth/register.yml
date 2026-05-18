@@ -12,7 +12,7 @@ http:
       {
         "username": "user",
         "email": "user@ab.com",
-        "password": "user"
+        "password": "user1234"
       }
   auth: inherit
 
