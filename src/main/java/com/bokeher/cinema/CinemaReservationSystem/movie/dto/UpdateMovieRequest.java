@@ -1,8 +1,9 @@
 package com.bokeher.cinema.CinemaReservationSystem.movie.dto;
 
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import com.bokeher.cinema.CinemaReservationSystem.validation.annotation.movie.ValidMovieDescription;
+import com.bokeher.cinema.CinemaReservationSystem.validation.annotation.movie.ValidMovieDuration;
+import com.bokeher.cinema.CinemaReservationSystem.validation.annotation.movie.ValidMovieRequiredAge;
+import com.bokeher.cinema.CinemaReservationSystem.validation.annotation.movie.ValidMovieTitle;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,15 +15,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UpdateMovieRequest {
 
-    @Size(max = 255, message = "Title must be at most 255 characters")
+    @ValidMovieTitle
     private String title;
 
-    @Size(max = 1000, message = "Description must be at most 1000 characters")
+    @ValidMovieDescription
     private String description;
 
-    @PositiveOrZero(message = "Required age must be zero or greater")
+    @ValidMovieRequiredAge
     private Integer requiredAge;
 
-    @Positive(message = "Duration must be greater than 0")
+    @ValidMovieDuration
     private Integer durationMinutes;
 }
