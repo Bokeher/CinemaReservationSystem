@@ -1,0 +1,10 @@
+info:
+  name: rooms
+  type: folder
+  seq: 4
+
+request:
+  headers:
+    - name: Authorization
+      value: Bearer {{jwt}}
+  auth: inherit

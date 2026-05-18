@@ -1,0 +1,22 @@
+info:
+  name: add-room
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseUrl}}/admin/rooms"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Room 1",
+        "seatsPerRow": [10, 12, 13]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
