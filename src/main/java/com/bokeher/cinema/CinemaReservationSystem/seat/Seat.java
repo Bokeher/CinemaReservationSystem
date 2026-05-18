@@ -20,6 +20,12 @@ import lombok.Setter;
 )
 public class Seat {
 
+    public Seat(Room room, int row, int number) {
+        this.room = room;
+        this.row = row;
+        this.number = number;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
