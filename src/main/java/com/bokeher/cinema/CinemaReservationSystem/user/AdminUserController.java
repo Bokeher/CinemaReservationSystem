@@ -3,6 +3,7 @@ package com.bokeher.cinema.CinemaReservationSystem.user;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.CreateUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UpdateUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ public class AdminUserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public UserResponse createUser(@RequestBody CreateUserRequest request) {
+    public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
         return userService.createUser(request);
     }
 
@@ -30,7 +31,7 @@ public class AdminUserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public UserResponse updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
+    public UserResponse updateUser(@PathVariable Long id, @Valid @RequestBody UpdateUserRequest request) {
         return userService.updateUser(id, request);
     }
 }
