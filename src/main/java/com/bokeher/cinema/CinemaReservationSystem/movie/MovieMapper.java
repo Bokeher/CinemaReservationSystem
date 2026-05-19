@@ -2,7 +2,6 @@ package com.bokeher.cinema.CinemaReservationSystem.movie;
 
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.CreateMovieRequest;
 import com.bokeher.cinema.CinemaReservationSystem.movie.dto.MovieResponse;
-import com.bokeher.cinema.CinemaReservationSystem.movie.dto.UpdateMovieRequest;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -30,21 +29,4 @@ public class MovieMapper {
         return movie;
     }
 
-    public void update(Movie movie, UpdateMovieRequest request) {
-        if (request.getTitle() != null) {
-            movie.setTitle(request.getTitle());
-        }
-
-        if (request.getDescription() != null) {
-            movie.setDescription(request.getDescription());
-        }
-
-        if (request.getRequiredAge() != null) {
-            movie.setRequiredAge(request.getRequiredAge());
-        }
-
-        if (request.getDurationMinutes() != null) {
-            movie.setDuration(Duration.ofMinutes(request.getDurationMinutes()));
-        }
-    }
 }

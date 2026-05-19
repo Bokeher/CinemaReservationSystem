@@ -51,14 +51,7 @@ public class UserService {
     }
 
     public User createUserInternal(String username, String email, String rawPassword, UserRole role) {
-
-        if (userRepository.existsByUsername(username)) {
-            throw new UsernameAlreadyExistsException(username);
-        }
-
-        if (userRepository.existsByEmail(email)) {
-            throw new EmailAlreadyExistsException(email);
-        }
+        validateCreate(username, email);
 
         User user = User.builder()
                 .username(username)
@@ -74,20 +67,15 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 
-        if (request.getUsername() != null
-                && !request.getUsername().equals(user.getUsername())
-                && userRepository.existsByUsername(request.getUsername())) {
+        validatePatch(user, request);
 
-            throw new UsernameAlreadyExistsException(request.getUsername());
-        }
+        applyPatch(user, request);
 
-        if (request.getEmail() != null
-                && !request.getEmail().equals(user.getEmail())
-                && userRepository.existsByEmail(request.getEmail())) {
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponse(savedUser);
+    }
 
-            throw new EmailAlreadyExistsException(request.getEmail());
-        }
-
+    private void applyPatch(User user, UpdateUserRequest request) {
         if (request.getUsername() != null) {
             user.setUsername(request.getUsername());
         }
@@ -103,9 +91,31 @@ public class UserService {
         if (request.getRole() != null) {
             user.setRole(request.getRole());
         }
-
-        User savedUser = userRepository.save(user);
-        return userMapper.toResponse(savedUser);
     }
 
+    private void validatePatch(User user, UpdateUserRequest request) {
+        if (request.getUsername() != null
+                && !request.getUsername().equals(user.getUsername())
+                && userRepository.existsByUsername(request.getUsername())) {
+
+            throw new UsernameAlreadyExistsException(request.getUsername());
+        }
+
+        if (request.getEmail() != null
+                && !request.getEmail().equals(user.getEmail())
+                && userRepository.existsByEmail(request.getEmail())) {
+
+            throw new EmailAlreadyExistsException(request.getEmail());
+        }
+    }
+
+    private void validateCreate(String username, String email) {
+        if (userRepository.existsByUsername(username)) {
+            throw new UsernameAlreadyExistsException(username);
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            throw new EmailAlreadyExistsException(email);
+        }
+    }
 }

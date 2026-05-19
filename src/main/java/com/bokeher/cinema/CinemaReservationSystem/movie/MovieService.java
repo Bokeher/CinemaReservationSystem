@@ -8,6 +8,7 @@ import com.bokeher.cinema.CinemaReservationSystem.movie.exception.MovieNotFoundE
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
@@ -78,10 +79,28 @@ public class MovieService {
             throw new MovieAlreadyExistsException(request.getTitle());
         }
 
-        movieMapper.update(movie, request);
+        applyPatch(movie, request);
 
         Movie savedMovie = movieRepository.save(movie);
 
         return movieMapper.toResponse(savedMovie);
+    }
+
+    private void applyPatch(Movie movie, UpdateMovieRequest request) {
+        if (request.getTitle() != null) {
+            movie.setTitle(request.getTitle());
+        }
+
+        if (request.getDescription() != null) {
+            movie.setDescription(request.getDescription());
+        }
+
+        if (request.getRequiredAge() != null) {
+            movie.setRequiredAge(request.getRequiredAge());
+        }
+
+        if (request.getDurationMinutes() != null) {
+            movie.setDuration(Duration.ofMinutes(request.getDurationMinutes()));
+        }
     }
 }
