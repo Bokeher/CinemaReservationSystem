@@ -1,6 +1,8 @@
 package com.bokeher.cinema.CinemaReservationSystem.auth;
 
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
+import com.bokeher.cinema.CinemaReservationSystem.security.JwtService;
+import com.bokeher.cinema.CinemaReservationSystem.security.UserPrincipal;
 import com.bokeher.cinema.CinemaReservationSystem.user.*;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;

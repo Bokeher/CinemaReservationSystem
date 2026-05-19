@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem.auth;
+package com.bokeher.cinema.CinemaReservationSystem.security;
 
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;

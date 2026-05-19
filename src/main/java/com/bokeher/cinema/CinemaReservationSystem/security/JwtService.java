@@ -1,4 +1,4 @@
-package com.bokeher.cinema.CinemaReservationSystem.auth;
+package com.bokeher.cinema.CinemaReservationSystem.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

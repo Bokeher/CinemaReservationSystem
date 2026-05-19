@@ -4,6 +4,8 @@ import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.exception.InvalidCredentialsException;
+import com.bokeher.cinema.CinemaReservationSystem.security.JwtService;
+import com.bokeher.cinema.CinemaReservationSystem.security.UserPrincipal;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserMapper;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
