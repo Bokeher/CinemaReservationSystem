@@ -3,16 +3,14 @@ package com.bokeher.cinema.CinemaReservationSystem.screening;
 import com.bokeher.cinema.CinemaReservationSystem.room.Room;
 import com.bokeher.cinema.CinemaReservationSystem.movie.Movie;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "screenings")
