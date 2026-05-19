@@ -18,6 +18,11 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
 
+    public Movie getById(Long id) {
+        return movieRepository.findById(id)
+                .orElseThrow(() -> new MovieNotFoundException(id));
+    }
+
     public List<MovieResponse> findByTitleIgnoreCase(String title) {
         return movieRepository.findByTitleContainingIgnoreCase(title)
                 .stream()
@@ -26,8 +31,7 @@ public class MovieService {
     }
 
     public MovieResponse findById(Long id) {
-        Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoundException(id));
+        Movie movie = getById(id);
 
         return movieMapper.toResponse(movie);
     }
@@ -60,15 +64,13 @@ public class MovieService {
     }
 
     public void deleteMovie(Long id) {
-        Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoundException(id));
+        Movie movie = getById(id);
 
         movieRepository.delete(movie);
     }
 
     public MovieResponse updateMovie(Long id, UpdateMovieRequest request) {
-        Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new MovieNotFoundException(id));
+        Movie movie = getById(id);
 
         if (!Objects.equals(movie.getTitle(), request.getTitle())
                 && movieRepository.existsByTitle(request.getTitle())) {
