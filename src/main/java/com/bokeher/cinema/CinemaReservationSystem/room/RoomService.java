@@ -16,9 +16,13 @@ public class RoomService {
     private final RoomMapper roomMapper;
     private final RoomSeatGenerator roomSeatGenerator;
 
-    public RoomResponse findById(Long id) {
-        Room room = roomRepository.findById(id)
+    public Room getById(Long id) {
+        return roomRepository.findById(id)
                 .orElseThrow(() -> new RoomNotFoundException(id));
+    }
+
+    public RoomResponse findById(Long id) {
+        Room room = getById(id);
 
         return roomMapper.toResponse(room);
     }
@@ -34,8 +38,7 @@ public class RoomService {
     }
 
     public void deleteRoom(Long id) {
-        Room room = roomRepository.findById(id)
-                .orElseThrow(() -> new RoomNotFoundException(id));
+        Room room = getById(id);
 
         roomRepository.delete(room);
     }
