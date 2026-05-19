@@ -1,0 +1,10 @@
+info:
+  name: screenings
+  type: folder
+  seq: 5
+
+request:
+  headers:
+    - name: Authorization
+      value: Bearer {{jwt}}
+  auth: inherit
