@@ -3,6 +3,7 @@ package com.bokeher.cinema.CinemaReservationSystem.screening;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.CreateScreeningRequest;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.UpdateScreeningRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ public class AdminScreeningController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public DetailedScreeningResponse createScreening(@RequestBody CreateScreeningRequest request) {
+    public DetailedScreeningResponse createScreening(@Valid @RequestBody CreateScreeningRequest request) {
         return screeningService.createScreening(request);
     }
 
@@ -30,7 +31,7 @@ public class AdminScreeningController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public DetailedScreeningResponse updateScreening(@PathVariable Long id, @RequestBody UpdateScreeningRequest request) {
+    public DetailedScreeningResponse updateScreening(@PathVariable Long id, @Valid @RequestBody UpdateScreeningRequest request) {
         return screeningService.updateScreening(id, request);
     }
 }
