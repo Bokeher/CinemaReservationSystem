@@ -50,9 +50,7 @@ public class ScreeningService {
     public DetailedScreeningResponse updateScreening(Long id, UpdateScreeningRequest request) {
         Screening screening = getById(id);
 
-        screening.setStartTime(request.getStartTime());
-        screening.setMovie(movieService.getById(request.getMovieId()));
-        screening.setRoom(roomService.getById(request.getRoomId()));
+        applyPatch(screening, request);
 
         Screening savedScreening = screeningRepository.save(screening);
 
@@ -71,4 +69,17 @@ public class ScreeningService {
                 .map(screeningMapper::toDetailedResponse)
                 .toList();
     }
+
+    private void applyPatch(Screening screening, UpdateScreeningRequest request) {
+        if (request.getMovieId() != null) {
+            screening.setMovie(movieService.getById(request.getMovieId()));
+        }
+        if (request.getRoomId() != null) {
+            screening.setRoom(roomService.getById(request.getRoomId()));
+        }
+        if (request.getStartTime() != null) {
+            screening.setStartTime(request.getStartTime());
+        }
+    }
+
 }
