@@ -7,6 +7,7 @@ import com.bokeher.cinema.CinemaReservationSystem.room.RoomService;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.CreateScreeningRequest;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.UpdateScreeningRequest;
+import com.bokeher.cinema.CinemaReservationSystem.screening.exception.RoomOccupiedException;
 import com.bokeher.cinema.CinemaReservationSystem.screening.exception.ScreeningNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class ScreeningService {
                 .endTime(request.getStartTime().plusMinutes(movie.getDuration().toMinutes()))
                 .build();
 
+        validateScreening(screening);
+
         Screening savedScreening = screeningRepository.save(screening);
 
         return screeningMapper.toDetailedResponse(savedScreening);
@@ -53,9 +56,24 @@ public class ScreeningService {
 
         applyPatch(screening, request);
 
+        validateScreening(screening);
+
         Screening savedScreening = screeningRepository.save(screening);
 
         return screeningMapper.toDetailedResponse(savedScreening);
+    }
+
+    private void validateScreening(Screening screening) {
+        boolean overlaps = screeningRepository.existsOverlappingScreening(
+                screening.getRoom().getId(),
+                screening.getId(),
+                screening.getStartTime(),
+                screening.getEndTime()
+        );
+
+        if (overlaps) {
+            throw new RoomOccupiedException();
+        }
     }
 
     public DetailedScreeningResponse findById(Long id) {
