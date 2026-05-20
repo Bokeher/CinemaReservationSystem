@@ -4,6 +4,7 @@ import com.bokeher.cinema.CinemaReservationSystem.movie.Movie;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieService;
 import com.bokeher.cinema.CinemaReservationSystem.room.Room;
 import com.bokeher.cinema.CinemaReservationSystem.room.RoomService;
+import com.bokeher.cinema.CinemaReservationSystem.screening.dto.BriefScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.CreateScreeningRequest;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.UpdateScreeningRequest;
@@ -82,10 +83,10 @@ public class ScreeningService {
         return screeningMapper.toDetailedResponse(screening);
     }
 
-    public List<DetailedScreeningResponse> findAll() {
+    public List<BriefScreeningResponse> findAll() {
         return screeningRepository.findAll()
                 .stream()
-                .map(screeningMapper::toDetailedResponse)
+                .map(screeningMapper::toBriefResponse)
                 .toList();
     }
 

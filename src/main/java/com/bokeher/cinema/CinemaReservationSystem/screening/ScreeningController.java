@@ -1,5 +1,6 @@
 package com.bokeher.cinema.CinemaReservationSystem.screening;
 
+import com.bokeher.cinema.CinemaReservationSystem.screening.dto.BriefScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ public class ScreeningController {
     }
 
     @GetMapping
-    public List<DetailedScreeningResponse> getScreenings() {
+    public List<BriefScreeningResponse> getScreenings() {
         return screeningService.findAll();
     }
 }
