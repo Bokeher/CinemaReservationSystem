@@ -18,7 +18,8 @@ public class ScreeningMapper {
                 screening.getId(),
                 movieMapper.toResponse(screening.getMovie()),
                 roomMapper.toResponse(screening.getRoom()),
-                screening.getStartTime()
+                screening.getStartTime(),
+                screening.getEndTime()
         );
     }
 }

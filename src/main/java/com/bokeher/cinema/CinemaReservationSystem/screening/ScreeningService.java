@@ -34,6 +34,7 @@ public class ScreeningService {
                 .movie(movie)
                 .room(room)
                 .startTime(request.getStartTime())
+                .endTime(request.getStartTime().plusMinutes(movie.getDuration().toMinutes()))
                 .build();
 
         Screening savedScreening = screeningRepository.save(screening);
@@ -79,6 +80,11 @@ public class ScreeningService {
         }
         if (request.getStartTime() != null) {
             screening.setStartTime(request.getStartTime());
+        }
+        if(request.getStartTime() != null || request.getMovieId() != null) {
+            screening.setEndTime(screening.getStartTime().plusMinutes(
+                    screening.getMovie().getDuration().toMinutes()
+            ));
         }
     }
 

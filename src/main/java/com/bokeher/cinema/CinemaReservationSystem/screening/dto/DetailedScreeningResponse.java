@@ -19,5 +19,6 @@ public class DetailedScreeningResponse {
     private MovieResponse movie;
     private RoomResponse room;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
 
 }
