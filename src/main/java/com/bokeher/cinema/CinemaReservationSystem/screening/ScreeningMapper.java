@@ -17,13 +17,13 @@ public class ScreeningMapper {
     private final RoomMapper roomMapper;
 
     public DetailedScreeningResponse toDetailedResponse(Screening screening) {
-        return new DetailedScreeningResponse(
-                screening.getId(),
-                movieMapper.toResponse(screening.getMovie()),
-                roomMapper.toResponse(screening.getRoom()),
-                screening.getStartTime(),
-                screening.getEndTime()
-        );
+        return DetailedScreeningResponse.builder()
+                .id(screening.getId())
+                .movie(movieMapper.toResponse(screening.getMovie()))
+                .room(roomMapper.toResponse(screening.getRoom()))
+                .startTime(screening.getStartTime())
+                .endTime(screening.getEndTime())
+                .build();
     }
 
     public BriefScreeningResponse toBriefResponse(Screening screening) {

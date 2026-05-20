@@ -5,11 +5,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SeatMapper {
+
     public SeatResponse toResponse(Seat seat) {
-        return new SeatResponse(
-                seat.getId(),
-                seat.getRow(),
-                seat.getNumber()
-        );
+        return SeatResponse.builder()
+                .id(seat.getId())
+                .row(seat.getRow())
+                .number(seat.getNumber())
+                .build();
     }
 }

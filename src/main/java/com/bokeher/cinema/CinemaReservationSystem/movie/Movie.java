@@ -1,10 +1,7 @@
 package com.bokeher.cinema.CinemaReservationSystem.movie;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Duration;
 
@@ -13,6 +10,7 @@ import java.time.Duration;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "movies")
 public class Movie {
 

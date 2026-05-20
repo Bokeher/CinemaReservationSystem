@@ -9,22 +9,24 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RoomMapper {
+
     private final SeatMapper seatMapper;
 
     public RoomResponse toResponse(Room room) {
-        return new RoomResponse(
-                room.getId(),
-                room.getName(),
-                room.getSeats().stream()
-                        .map(seatMapper::toResponse)
-                        .toList()
-        );
+        return RoomResponse.builder()
+                .id(room.getId())
+                .name(room.getName())
+                .seats(
+                        room.getSeats().stream()
+                                .map(seatMapper::toResponse)
+                                .toList()
+                )
+                .build();
     }
 
     public Room toEntity(CreateRoomRequest request) {
-        Room room = new Room();
-        room.setName(request.getName());
-
-        return room;
+        return Room.builder()
+                .name(request.getName())
+                .build();
     }
 }

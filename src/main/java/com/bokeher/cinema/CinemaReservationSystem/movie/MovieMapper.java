@@ -8,25 +8,24 @@ import java.time.Duration;
 
 @Component
 public class MovieMapper {
+
     public MovieResponse toResponse(Movie movie) {
-        return new MovieResponse(
-            movie.getId(),
-            movie.getTitle(),
-            movie.getDescription(),
-            movie.getRequiredAge(),
-            (int) movie.getDuration().toMinutes()
-        );
+        return MovieResponse.builder()
+                .id(movie.getId())
+                .title(movie.getTitle())
+                .description(movie.getDescription())
+                .requiredAge(movie.getRequiredAge())
+                .durationMinutes((int) movie.getDuration().toMinutes())
+                .build();
     }
 
     public Movie toEntity(CreateMovieRequest request) {
-        Movie movie = new Movie();
-
-        movie.setTitle(request.getTitle());
-        movie.setDescription(request.getDescription());
-        movie.setRequiredAge(request.getRequiredAge());
-        movie.setDuration(Duration.ofMinutes(request.getDurationMinutes()));
-
-        return movie;
+        return Movie.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .requiredAge(request.getRequiredAge())
+                .duration(Duration.ofMinutes(request.getDurationMinutes()))
+                .build();
     }
 
 }
