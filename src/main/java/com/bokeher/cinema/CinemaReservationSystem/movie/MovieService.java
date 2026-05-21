@@ -57,7 +57,7 @@ public class MovieService {
     }
 
     public List<MovieResponse> find(String title) {
-        if (title == null) {
+        if (title == null || title.isBlank()) {
             return findAll();
         }
 
