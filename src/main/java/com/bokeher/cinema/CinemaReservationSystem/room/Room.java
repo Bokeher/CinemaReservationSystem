@@ -25,6 +25,7 @@ public class Room {
 
     @Column(nullable = false)
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Seat> seats = new ArrayList<>();
 
     public void addSeat(Seat seat) {
