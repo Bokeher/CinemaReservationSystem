@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bokeher.cinema.CinemaReservationSystem.movie.MovieAssertions.*;
 import static com.bokeher.cinema.CinemaReservationSystem.movie.MovieFixtures.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,7 +60,7 @@ class MovieServiceTest {
 
         MovieResponse response = movieService.findById(MOVIE_ID);
 
-        assertResponseEqualsMovie(movie, response);
+        assertMovieResponse(movie, response);
     }
 
     @Test
@@ -72,8 +73,8 @@ class MovieServiceTest {
         List<MovieResponse> movieResponses = movieService.findAll();
 
         assertEquals(2, movieResponses.size());
-        assertResponseEqualsMovie(movie, movieResponses.get(0));
-        assertResponseEqualsMovie(movie2, movieResponses.get(1));
+        assertMovieResponse(movie, movieResponses.get(0));
+        assertMovieResponse(movie2, movieResponses.get(1));
     }
 
     @Test
@@ -95,8 +96,8 @@ class MovieServiceTest {
         List<MovieResponse> movieResponses = movieService.find(null);
 
         assertEquals(2, movieResponses.size());
-        assertResponseEqualsMovie(movie, movieResponses.get(0));
-        assertResponseEqualsMovie(movie2, movieResponses.get(1));
+        assertMovieResponse(movie, movieResponses.get(0));
+        assertMovieResponse(movie2, movieResponses.get(1));
         verify(movieRepository).findAll();
     }
 
@@ -110,7 +111,7 @@ class MovieServiceTest {
         List<MovieResponse> movieResponses = movieService.find(TITLE);
 
         assertEquals(1, movieResponses.size());
-        assertResponseEqualsMovie(movie, movieResponses.get(0));
+        assertMovieResponse(movie, movieResponses.get(0));
 
         verify(movieRepository).findByTitleContainingIgnoreCase(TITLE);
     }
@@ -125,7 +126,7 @@ class MovieServiceTest {
 
         MovieResponse response = movieService.createMovie(request);
 
-        assertResponseEqualsMovie(movie, response);
+        assertMovieResponse(movie, response);
 
         ArgumentCaptor<Movie> movieCaptor = ArgumentCaptor.forClass(Movie.class);
 
@@ -176,7 +177,7 @@ class MovieServiceTest {
 
         MovieResponse responseWithUpdatedMovie = movieService.updateMovie(MOVIE_ID, request);
 
-        assertResponseEqualsMovie(updatedMovie, responseWithUpdatedMovie);
+        assertMovieResponse(updatedMovie, responseWithUpdatedMovie);
 
         ArgumentCaptor<Movie> movieCaptor = ArgumentCaptor.forClass(Movie.class);
 
@@ -209,7 +210,7 @@ class MovieServiceTest {
 
         MovieResponse response = movieService.updateMovie(MOVIE_ID, request);
 
-        assertResponseEqualsMovie(updatedMovie, response);
+        assertMovieResponse(updatedMovie, response);
 
         verify(movieRepository, never()).existsByTitle(TITLE);
     }
@@ -228,19 +229,4 @@ class MovieServiceTest {
         );
     }
 
-    private void assertMovie(Movie expected, Movie actual) {
-        assertEquals(expected.getId(), actual.getId());
-        assertEquals(expected.getTitle(), actual.getTitle());
-        assertEquals(expected.getDescription(), actual.getDescription());
-        assertEquals(expected.getRequiredAge(), actual.getRequiredAge());
-        assertEquals(expected.getDuration(), actual.getDuration());
-    }
-
-    private void assertResponseEqualsMovie(Movie expectedMovie, MovieResponse actualResponse) {
-        assertEquals(expectedMovie.getId(), actualResponse.getId());
-        assertEquals(expectedMovie.getTitle(), actualResponse.getTitle());
-        assertEquals(expectedMovie.getDescription(), actualResponse.getDescription());
-        assertEquals(expectedMovie.getRequiredAge(), actualResponse.getRequiredAge());
-        assertEquals(expectedMovie.getDuration().toMinutes(), actualResponse.getDurationMinutes());
-    }
 }

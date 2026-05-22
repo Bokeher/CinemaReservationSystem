@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.bokeher.cinema.CinemaReservationSystem.room.RoomFixtures.*;
+import static com.bokeher.cinema.CinemaReservationSystem.room.RoomAssertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -63,7 +64,7 @@ class RoomServiceTest {
 
         RoomResponse response = roomService.findById(ROOM_ID);
 
-        assertResponseEqualsRoom(room, response);
+        assertRoomResponse(room, response);
     }
 
     @Test
@@ -75,7 +76,7 @@ class RoomServiceTest {
 
         RoomResponse response = roomService.createRoom(createRoomRequest);
 
-        assertResponseEqualsRoom(room, response);
+        assertRoomResponse(room, response);
 
         ArgumentCaptor<Room> roomCaptor = ArgumentCaptor.forClass(Room.class);
         verify(roomRepository).save(roomCaptor.capture());
@@ -106,8 +107,8 @@ class RoomServiceTest {
         List<RoomResponse> response = roomService.findAll();
 
         assertEquals(2, response.size());
-        assertResponseEqualsRoom(room, response.get(0));
-        assertResponseEqualsRoom(room2, response.get(1));
+        assertRoomResponse(room, response.get(0));
+        assertRoomResponse(room2, response.get(1));
     }
 
     @Test
@@ -117,18 +118,6 @@ class RoomServiceTest {
         List<RoomResponse> response = roomService.findAll();
 
         assertTrue(response.isEmpty());
-    }
-
-    private void assertResponseEqualsRoom(Room expectedRoom, RoomResponse actualResponse) {
-        assertEquals(expectedRoom.getId(), actualResponse.getId());
-        assertEquals(expectedRoom.getName(), actualResponse.getName());
-        assertEquals(expectedRoom.getSeats().size(), actualResponse.getSeats().size());
-    }
-
-    private void assertRoom(Room expectedRoom, Room actualRoom) {
-        assertEquals(expectedRoom.getId(), actualRoom.getId());
-        assertEquals(expectedRoom.getName(), actualRoom.getName());
-        assertEquals(expectedRoom.getSeats().size(), actualRoom.getSeats().size());
     }
 
 }
