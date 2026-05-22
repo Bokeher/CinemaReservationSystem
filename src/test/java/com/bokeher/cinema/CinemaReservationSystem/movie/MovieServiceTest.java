@@ -12,10 +12,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import static com.bokeher.cinema.CinemaReservationSystem.movie.MovieFixtures.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -24,18 +24,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class MovieServiceTest {
-
-    private static final Long MOVIE_ID = 1L;
-    private static final String TITLE = "Inception";
-    private static final String DESCRIPTION = "A mind-bending sci-fi thriller";
-    private static final int REQUIRED_AGE = 13;
-    private static final int DURATION_MINUTES = 148;
-
-    private static final Long UPDATED_MOVIE_ID = 2L;
-    private static final String UPDATED_TITLE = "Interstellar";
-    private static final String UPDATED_DESCRIPTION = "A sci-fi story about space and time";
-    private static final int UPDATED_REQUIRED_AGE = 16;
-    private static final int UPDATED_DURATION_MINUTES = 169;
 
     @Mock
     private MovieRepository movieRepository;
@@ -49,7 +37,7 @@ class MovieServiceTest {
 
     @Test
     void getById_shouldReturnMovie_whenMovieExists() {
-        Movie movie = createExampleMovie();
+        Movie movie = anyMovie().build();
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
 
         Movie result = movieService.getById(MOVIE_ID);
@@ -66,7 +54,7 @@ class MovieServiceTest {
 
     @Test
     void findById_shouldReturnMovieResponse_whenMovieExists() {
-        Movie movie = createExampleMovie();
+        Movie movie = anyMovie().build();
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
 
         MovieResponse response = movieService.findById(MOVIE_ID);
@@ -76,8 +64,8 @@ class MovieServiceTest {
 
     @Test
     void findAll_shouldReturnListOfResponses_whenMoviesExist() {
-        Movie movie = createExampleMovie();
-        Movie movie2 = createExampleMovie2();
+        Movie movie = anyMovie().build();
+        Movie movie2 = updatedMovie().build();
 
         when(movieRepository.findAll()).thenReturn(List.of(movie, movie2));
 
@@ -99,8 +87,8 @@ class MovieServiceTest {
 
     @Test
     void find_shouldReturnAllMovies_whenTitleIsNull() {
-        Movie movie = createExampleMovie();
-        Movie movie2 = createExampleMovie2();
+        Movie movie = anyMovie().build();
+        Movie movie2 = updatedMovie().build();
 
         when(movieRepository.findAll()).thenReturn(List.of(movie, movie2));
 
@@ -114,7 +102,7 @@ class MovieServiceTest {
 
     @Test
     void find_shouldReturnOneMovie_whenTitleNotNull() {
-        Movie movie = createExampleMovie();
+        Movie movie = anyMovie().build();
 
         when(movieRepository.findByTitleContainingIgnoreCase(TITLE))
                 .thenReturn(List.of(movie));
@@ -129,8 +117,8 @@ class MovieServiceTest {
 
     @Test
     void createMovie_shouldCreateMovie_whenTitleDoesNotExist() {
-        CreateMovieRequest request = getCreateRequest();
-        Movie movie = createExampleMovie();
+        CreateMovieRequest request = anyCreateRequest().build();
+        Movie movie = anyMovie().build();
 
         when(movieRepository.existsByTitle(TITLE)).thenReturn(false);
         when(movieRepository.save(any())).thenReturn(movie);
@@ -156,19 +144,19 @@ class MovieServiceTest {
 
     @Test
     void createMovie_shouldThrowException_whenTitleExists() {
-        CreateMovieRequest request = getCreateRequest();
+        CreateMovieRequest request = anyCreateRequest().build();
 
         when(movieRepository.existsByTitle(TITLE)).thenReturn(true);
 
         assertThrows(
                 MovieAlreadyExistsException.class,
-                () ->  movieService.createMovie(request)
+                () -> movieService.createMovie(request)
         );
     }
 
     @Test
     void deleteMovie_shouldDeleteMovie() {
-        Movie movie = createExampleMovie();
+        Movie movie = anyMovie().build();
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
 
         movieService.deleteMovie(MOVIE_ID);
@@ -178,9 +166,9 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldUpdateMovie_whenCompleteRequest() {
-        UpdateMovieRequest request = getUpdateRequest();
-        Movie movie = createExampleMovie();
-        Movie updatedMovie = createExampleMovie2();
+        UpdateMovieRequest request = anyUpdateRequest().build();
+        Movie movie = anyMovie().build();
+        Movie updatedMovie = updatedMovie().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
         when(movieRepository.existsByTitle(UPDATED_TITLE)).thenReturn(false);
@@ -206,10 +194,15 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldUpdateWithoutCheckingTitleConflict_whenTitleDidNotChange() {
-        UpdateMovieRequest request = getUpdateRequestSameTitle();
-        Movie movie = createExampleMovie();
-        Movie updatedMovie = createExampleMovie2();
-        updatedMovie.setTitle(movie.getTitle());
+        UpdateMovieRequest request = anyUpdateRequest()
+                .title(TITLE)
+                .build();
+
+        Movie movie = anyMovie().build();
+
+        Movie updatedMovie = updatedMovie()
+                .title(TITLE)
+                .build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
         when(movieRepository.save(any())).thenReturn(updatedMovie);
@@ -223,8 +216,8 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldThrowException_whenExistsMovieWithSameTitle() {
-        Movie movie = createExampleMovie();
-        UpdateMovieRequest request = getUpdateRequest();
+        Movie movie = anyMovie().build();
+        UpdateMovieRequest request = anyUpdateRequest().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
         when(movieRepository.existsByTitle(UPDATED_TITLE)).thenReturn(true);
@@ -233,57 +226,6 @@ class MovieServiceTest {
                 MovieAlreadyExistsException.class,
                 () -> movieService.updateMovie(MOVIE_ID, request)
         );
-    }
-
-    private CreateMovieRequest getCreateRequest() {
-        return CreateMovieRequest.builder()
-                .title(TITLE)
-                .description(DESCRIPTION)
-                .requiredAge(REQUIRED_AGE)
-                .durationMinutes(DURATION_MINUTES)
-                .build();
-    }
-
-    private UpdateMovieRequest getUpdateRequest() {
-        return UpdateMovieRequest.builder()
-                .title(UPDATED_TITLE)
-                .description(UPDATED_DESCRIPTION)
-                .requiredAge(UPDATED_REQUIRED_AGE)
-                .durationMinutes(UPDATED_DURATION_MINUTES)
-                .build();
-    }
-
-    private UpdateMovieRequest getUpdateRequestSameTitle() {
-        return UpdateMovieRequest.builder()
-                .title(TITLE)
-                .description(UPDATED_DESCRIPTION)
-                .requiredAge(UPDATED_REQUIRED_AGE)
-                .durationMinutes(UPDATED_DURATION_MINUTES)
-                .build();
-    }
-
-    private Movie createExampleMovie2() {
-        return createMovie(
-                UPDATED_MOVIE_ID,
-                UPDATED_TITLE,
-                UPDATED_DESCRIPTION,
-                UPDATED_REQUIRED_AGE,
-                UPDATED_DURATION_MINUTES
-        );
-    }
-
-    private Movie createExampleMovie() {
-        return createMovie(MOVIE_ID, TITLE, DESCRIPTION, REQUIRED_AGE, DURATION_MINUTES);
-    }
-
-    private Movie createMovie(long id, String title, String description, int requiredAge, int durationMinutes) {
-        return Movie.builder()
-                .id(id)
-                .title(title)
-                .description(description)
-                .requiredAge(requiredAge)
-                .duration(Duration.ofMinutes(durationMinutes))
-                .build();
     }
 
     private void assertMovie(Movie expected, Movie actual) {
