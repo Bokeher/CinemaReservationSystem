@@ -37,7 +37,7 @@ public class MovieFixtures {
                 .duration(Duration.ofMinutes(UPDATED_DURATION_MINUTES));
     }
 
-    public static CreateMovieRequest.CreateMovieRequestBuilder anyCreateRequest() {
+    public static CreateMovieRequest.CreateMovieRequestBuilder anyCreateMovieRequest() {
         return CreateMovieRequest.builder()
                 .title(TITLE)
                 .description(DESCRIPTION)
@@ -45,7 +45,7 @@ public class MovieFixtures {
                 .durationMinutes(DURATION_MINUTES);
     }
 
-    public static UpdateMovieRequest.UpdateMovieRequestBuilder anyUpdateRequest() {
+    public static UpdateMovieRequest.UpdateMovieRequestBuilder anyUpdateMovieRequest() {
         return UpdateMovieRequest.builder()
                 .title(UPDATED_TITLE)
                 .description(UPDATED_DESCRIPTION)

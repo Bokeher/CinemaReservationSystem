@@ -41,7 +41,7 @@ public class RoomFixtures {
         return room.toBuilder();
     }
 
-    public static CreateRoomRequest.CreateRoomRequestBuilder anyCreateRequest() {
+    public static CreateRoomRequest.CreateRoomRequestBuilder anyCreateRoomRequest() {
         return CreateRoomRequest.builder()
                 .name(ROOM_NAME)
                 .seatsPerRow(SEATS_PER_ROW);

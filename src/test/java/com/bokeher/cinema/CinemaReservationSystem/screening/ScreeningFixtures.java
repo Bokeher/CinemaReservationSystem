@@ -44,14 +44,14 @@ public class ScreeningFixtures {
                 .endTime(UPDATED_START_TIME.plusMinutes(movie.getDuration().toMinutes()));
     }
 
-    public static CreateScreeningRequest.CreateScreeningRequestBuilder anyCreateRequest() {
+    public static CreateScreeningRequest.CreateScreeningRequestBuilder anyCreateScreeningRequest() {
         return CreateScreeningRequest.builder()
                 .movieId(MOVIE_ID)
                 .roomId(ROOM_ID)
                 .startTime(START_TIME);
     }
 
-    public static UpdateScreeningRequest.UpdateScreeningRequestBuilder anyUpdateRequest() {
+    public static UpdateScreeningRequest.UpdateScreeningRequestBuilder anyUpdateScreeningRequest() {
         return UpdateScreeningRequest.builder()
                 .movieId(UPDATED_MOVIE_ID)
                 .roomId(UPDATED_ROOM_ID)

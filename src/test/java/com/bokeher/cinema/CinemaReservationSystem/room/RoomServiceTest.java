@@ -79,7 +79,7 @@ class RoomServiceTest {
     @Test
     void createRoom_shouldCreateRoom() {
         Room room = anyRoom().build();
-        CreateRoomRequest createRoomRequest = anyCreateRequest().build();
+        CreateRoomRequest createRoomRequest = anyCreateRoomRequest().build();
 
         when(roomRepository.save(any(Room.class))).thenReturn(room);
 

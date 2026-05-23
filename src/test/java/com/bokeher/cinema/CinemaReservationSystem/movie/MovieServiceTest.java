@@ -128,7 +128,7 @@ class MovieServiceTest {
 
     @Test
     void createMovie_shouldCreateMovie_whenTitleDoesNotExist() {
-        CreateMovieRequest request = anyCreateRequest().build();
+        CreateMovieRequest request = anyCreateMovieRequest().build();
         Movie movie = anyMovie().build();
 
         when(movieRepository.existsByTitle(TITLE)).thenReturn(false);
@@ -155,7 +155,7 @@ class MovieServiceTest {
 
     @Test
     void createMovie_shouldThrowException_whenTitleExists() {
-        CreateMovieRequest request = anyCreateRequest().build();
+        CreateMovieRequest request = anyCreateMovieRequest().build();
 
         when(movieRepository.existsByTitle(TITLE)).thenReturn(true);
 
@@ -189,7 +189,7 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldUpdateMovie_whenCompleteRequest() {
-        UpdateMovieRequest request = anyUpdateRequest().build();
+        UpdateMovieRequest request = anyUpdateMovieRequest().build();
         Movie movie = anyMovie().build();
         Movie updatedMovie = updatedMovie().build();
 
@@ -217,7 +217,7 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldThrowException_whenMovieDoesNotExist() {
-        UpdateMovieRequest request = anyUpdateRequest().build();
+        UpdateMovieRequest request = anyUpdateMovieRequest().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.empty());
 
@@ -232,7 +232,7 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldUpdateWithoutCheckingTitleConflict_whenTitleDidNotChange() {
-        UpdateMovieRequest request = anyUpdateRequest()
+        UpdateMovieRequest request = anyUpdateMovieRequest()
                 .title(TITLE)
                 .build();
 
@@ -255,7 +255,7 @@ class MovieServiceTest {
     @Test
     void updateMovie_shouldThrowException_whenExistsMovieWithSameTitle() {
         Movie movie = anyMovie().build();
-        UpdateMovieRequest request = anyUpdateRequest().build();
+        UpdateMovieRequest request = anyUpdateMovieRequest().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
         when(movieRepository.existsByTitle(UPDATED_TITLE)).thenReturn(true);
