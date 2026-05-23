@@ -18,8 +18,7 @@ import static com.bokeher.cinema.CinemaReservationSystem.room.RoomFixtures.*;
 import static com.bokeher.cinema.CinemaReservationSystem.room.RoomAssertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RoomServiceTest {
@@ -68,6 +67,16 @@ class RoomServiceTest {
     }
 
     @Test
+    void findById_shouldThrowException_whenRoomDoesNotExist() {
+        when(roomRepository.findById(ROOM_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                RoomNotFoundException.class,
+                () -> roomService.findById(ROOM_ID)
+        );
+    }
+
+    @Test
     void createRoom_shouldCreateRoom() {
         Room room = anyRoom().build();
         CreateRoomRequest createRoomRequest = anyCreateRequest().build();
@@ -95,6 +104,18 @@ class RoomServiceTest {
         roomService.deleteRoom(ROOM_ID);
 
         verify(roomRepository).delete(room);
+    }
+
+    @Test
+    void deleteRoom_shouldThrowException_whenRoomDoesNotExist() {
+        when(roomRepository.findById(ROOM_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                RoomNotFoundException.class,
+                () -> roomService.deleteRoom(ROOM_ID)
+        );
+
+        verify(roomRepository, never()).delete(any());
     }
 
     @Test
