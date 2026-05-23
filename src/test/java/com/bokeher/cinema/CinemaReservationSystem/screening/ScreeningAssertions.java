@@ -1,5 +1,6 @@
 package com.bokeher.cinema.CinemaReservationSystem.screening;
 
+import com.bokeher.cinema.CinemaReservationSystem.screening.dto.BriefScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
 
 import static com.bokeher.cinema.CinemaReservationSystem.movie.MovieAssertions.assertMovie;
@@ -23,11 +24,21 @@ public class ScreeningAssertions {
         );
     }
 
-    public static void assertScreeningResponse(Screening expected, DetailedScreeningResponse actual) {
+    public static void assertDetailedScreeningResponse(Screening expected, DetailedScreeningResponse actual) {
         assertAll(
                 () -> assertEquals(expected.getId(), actual.getId()),
                 () -> assertMovieResponse(expected.getMovie(), actual.getMovie()),
                 () -> assertRoomResponse(expected.getRoom(), actual.getRoom()),
+                () -> assertEquals(expected.getStartTime(), actual.getStartTime()),
+                () -> assertEquals(expected.getEndTime(), actual.getEndTime())
+        );
+    }
+
+    public static void assertBriefScreeningResponse(Screening expected, BriefScreeningResponse actual) {
+        assertAll(
+                () -> assertEquals(expected.getId(), actual.getId()),
+                () -> assertEquals(expected.getMovie().getId(), actual.getMovieId()),
+                () -> assertEquals(expected.getRoom().getId(), actual.getRoomId()),
                 () -> assertEquals(expected.getStartTime(), actual.getStartTime()),
                 () -> assertEquals(expected.getEndTime(), actual.getEndTime())
         );
