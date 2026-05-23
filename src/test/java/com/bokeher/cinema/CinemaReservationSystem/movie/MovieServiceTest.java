@@ -64,6 +64,16 @@ class MovieServiceTest {
     }
 
     @Test
+    void findById_shouldThrowException_whenMovieDoesNotExist() {
+        when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                MovieNotFoundException.class,
+                () -> movieService.findById(MOVIE_ID)
+        );
+    }
+
+    @Test
     void findAll_shouldReturnListOfResponses_whenMoviesExist() {
         Movie movie = anyMovie().build();
         Movie movie2 = updatedMovie().build();
@@ -166,6 +176,18 @@ class MovieServiceTest {
     }
 
     @Test
+    void deleteMovie_shouldThrowException_whenMovieDoesNotExist() {
+        when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                MovieNotFoundException.class,
+                () -> movieService.deleteMovie(MOVIE_ID)
+        );
+
+        verify(movieRepository, never()).delete(any());
+    }
+
+    @Test
     void updateMovie_shouldUpdateMovie_whenCompleteRequest() {
         UpdateMovieRequest request = anyUpdateRequest().build();
         Movie movie = anyMovie().build();
@@ -191,6 +213,21 @@ class MovieServiceTest {
                 () -> assertEquals(UPDATED_REQUIRED_AGE, savedMovie.getRequiredAge()),
                 () -> assertEquals(UPDATED_DURATION_MINUTES, savedMovie.getDuration().toMinutes())
         );
+    }
+
+    @Test
+    void updateMovie_shouldThrowException_whenMovieDoesNotExist() {
+        UpdateMovieRequest request = anyUpdateRequest().build();
+
+        when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                MovieNotFoundException.class,
+                () -> movieService.updateMovie(MOVIE_ID, request)
+        );
+
+        verify(movieRepository, never()).save(any());
+        verify(movieRepository, never()).existsByTitle(any());
     }
 
     @Test
