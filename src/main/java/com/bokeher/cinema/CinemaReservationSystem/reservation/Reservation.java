@@ -4,16 +4,14 @@ import com.bokeher.cinema.CinemaReservationSystem.screening.Screening;
 import com.bokeher.cinema.CinemaReservationSystem.seat.Seat;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Table(name = "reservations")
 public class Reservation {
 
