@@ -12,11 +12,13 @@ import com.bokeher.cinema.CinemaReservationSystem.screening.exception.RoomOccupi
 import com.bokeher.cinema.CinemaReservationSystem.screening.exception.ScreeningNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ScreeningService {
     private final ScreeningMapper screeningMapper;
     private final ScreeningRepository screeningRepository;
@@ -28,6 +30,7 @@ public class ScreeningService {
                 .orElseThrow(() -> new ScreeningNotFoundException(id));
     }
 
+    @Transactional
     public DetailedScreeningResponse createScreening(CreateScreeningRequest request) {
         Movie movie = movieService.getById(request.getMovieId());
         Room room = roomService.getById(request.getRoomId());
@@ -46,12 +49,14 @@ public class ScreeningService {
         return screeningMapper.toDetailedResponse(savedScreening);
     }
 
+    @Transactional
     public void deleteScreening(Long id) {
         Screening screening = getById(id);
 
         screeningRepository.delete(screening);
     }
 
+    @Transactional
     public DetailedScreeningResponse updateScreening(Long id, UpdateScreeningRequest request) {
         Screening screening = getById(id);
 

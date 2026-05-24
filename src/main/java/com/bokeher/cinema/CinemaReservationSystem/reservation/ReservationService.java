@@ -10,15 +10,16 @@ import com.bokeher.cinema.CinemaReservationSystem.seat.exception.SeatNotFoundExc
 import com.bokeher.cinema.CinemaReservationSystem.seat.SeatRepository;
 import com.bokeher.cinema.CinemaReservationSystem.security.UserPrincipal;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ReservationService {
 
     private final ReservationRepository reservationRepository;
@@ -31,6 +32,7 @@ public class ReservationService {
                 .orElseThrow(() -> new ReservationNotFoundException(id));
     }
 
+    @Transactional
     public void cancelReservation(Long id, UserPrincipal userPrincipal) {
         Reservation reservation = getById(id);
 
@@ -47,6 +49,7 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+    @Transactional
     public void confirmReservation(Long id, UserPrincipal userPrincipal) {
         Reservation reservation = getById(id);
 

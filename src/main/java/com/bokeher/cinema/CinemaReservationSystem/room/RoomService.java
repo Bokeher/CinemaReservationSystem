@@ -5,11 +5,13 @@ import com.bokeher.cinema.CinemaReservationSystem.room.dto.RoomResponse;
 import com.bokeher.cinema.CinemaReservationSystem.room.exception.RoomNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RoomService {
 
     private final RoomRepository roomRepository;
@@ -27,6 +29,7 @@ public class RoomService {
         return roomMapper.toResponse(room);
     }
 
+    @Transactional
     public RoomResponse createRoom(CreateRoomRequest request) {
         Room room = roomMapper.toEntity(request);
 
@@ -37,6 +40,7 @@ public class RoomService {
         return roomMapper.toResponse(savedRoom);
     }
 
+    @Transactional
     public void deleteRoom(Long id) {
         Room room = getById(id);
 

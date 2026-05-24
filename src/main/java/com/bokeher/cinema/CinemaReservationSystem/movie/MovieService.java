@@ -7,6 +7,7 @@ import com.bokeher.cinema.CinemaReservationSystem.movie.exception.MovieAlreadyEx
 import com.bokeher.cinema.CinemaReservationSystem.movie.exception.MovieNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class MovieService {
 
     private final MovieRepository movieRepository;
@@ -44,6 +46,7 @@ public class MovieService {
                 .toList();
     }
 
+    @Transactional
     public MovieResponse createMovie(CreateMovieRequest request) {
         if(movieRepository.existsByTitle(request.getTitle())) {
             throw new MovieAlreadyExistsException(request.getTitle());
@@ -64,12 +67,14 @@ public class MovieService {
         return findByTitleIgnoreCase(title);
     }
 
+    @Transactional
     public void deleteMovie(Long id) {
         Movie movie = getById(id);
 
         movieRepository.delete(movie);
     }
 
+    @Transactional
     public MovieResponse updateMovie(Long id, UpdateMovieRequest request) {
         Movie movie = getById(id);
 

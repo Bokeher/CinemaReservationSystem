@@ -9,9 +9,11 @@ import com.bokeher.cinema.CinemaReservationSystem.user.exception.UserNotFoundExc
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
@@ -32,6 +34,7 @@ public class UserService {
         return userMapper.toResponse(user);
     }
 
+    @Transactional
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
@@ -39,6 +42,7 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    @Transactional
     public UserResponse createUser(CreateUserRequest request) {
         User savedUser = createUserInternal(
                 request.getUsername(),
@@ -50,6 +54,7 @@ public class UserService {
         return userMapper.toResponse(savedUser);
     }
 
+    @Transactional
     public User createUserInternal(String username, String email, String rawPassword, UserRole role) {
         validateCreate(username, email);
 
@@ -63,6 +68,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public UserResponse updateUser(Long id, UpdateUserRequest request) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
