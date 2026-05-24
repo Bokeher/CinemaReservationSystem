@@ -3,6 +3,7 @@ package com.bokeher.cinema.CinemaReservationSystem.screening;
 import com.bokeher.cinema.CinemaReservationSystem.movie.Movie;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieMapper;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieService;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationRepository;
 import com.bokeher.cinema.CinemaReservationSystem.room.Room;
 import com.bokeher.cinema.CinemaReservationSystem.room.RoomMapper;
 import com.bokeher.cinema.CinemaReservationSystem.room.RoomService;
@@ -49,13 +50,18 @@ class ScreeningServiceTest {
     @Mock
     RoomService roomService;
 
+    @Mock
+    ReservationRepository reservationRepository;
+
     @BeforeEach
     void setUp() {
         screeningService = new ScreeningService(
                 new ScreeningMapper(new MovieMapper(), new RoomMapper(new SeatMapper())),
                 screeningRepository,
                 movieService,
-                roomService
+                roomService,
+                new SeatMapper(),
+                reservationRepository
         );
     }
 
