@@ -4,15 +4,13 @@ import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
 import com.bokeher.cinema.CinemaReservationSystem.validation.UserConstants;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UpdateUserRequest {
 
     @Size(
@@ -37,6 +35,6 @@ public class UpdateUserRequest {
     )
     private String password;
 
-
     private UserRole role;
+
 }
