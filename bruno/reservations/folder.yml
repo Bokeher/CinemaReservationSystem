@@ -1,0 +1,10 @@
+info:
+  name: reservations
+  type: folder
+  seq: 6
+
+request:
+  headers:
+    - name: Authorization
+      value: Bearer {{jwt}}
+  auth: inherit

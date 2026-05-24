@@ -1,11 +1,11 @@
 info:
   name: get-by-id
   type: http
-  seq: 2
+  seq: 1
 
 http:
   method: GET
-  url: "{{baseUrl}}/rooms/2"
+  url: "{{baseUrl}}/reservations/1"
   auth: inherit
 
 settings:
