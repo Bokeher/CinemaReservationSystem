@@ -1,9 +1,9 @@
 package com.bokeher.cinema.CinemaReservationSystem.reservation.dto;
 
 import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationStatus;
-import com.bokeher.cinema.CinemaReservationSystem.screening.Screening;
-import com.bokeher.cinema.CinemaReservationSystem.seat.Seat;
-import com.bokeher.cinema.CinemaReservationSystem.user.User;
+import com.bokeher.cinema.CinemaReservationSystem.screening.dto.BriefScreeningResponse;
+import com.bokeher.cinema.CinemaReservationSystem.seat.dto.SeatResponse;
+import com.bokeher.cinema.CinemaReservationSystem.user.dto.UserResponse;
 import lombok.*;
 
 @AllArgsConstructor
@@ -14,11 +14,11 @@ public class ReservationResponse {
 
     private Long id;
 
-    private User user;
+    private UserResponse user;
 
-    private Screening screening;
+    private BriefScreeningResponse screening;
 
-    private Seat seat;
+    private SeatResponse seat;
 
     private ReservationStatus status;
 
