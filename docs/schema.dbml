@@ -49,8 +49,11 @@ Table reservations {
   screening_id integer [not null]
   seat_id integer [not null]
   status ReservationStatus [not null]
+  active bool
 
-  // There should be only one CONFIRMED reservation with the same seat_id and screening_id
+  Indexes {
+    (screening_id, seat_id, active) [unique]
+  }
 }
 
 Enum ReservationStatus {
