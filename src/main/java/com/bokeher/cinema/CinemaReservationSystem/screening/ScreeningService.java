@@ -2,19 +2,22 @@ package com.bokeher.cinema.CinemaReservationSystem.screening;
 
 import com.bokeher.cinema.CinemaReservationSystem.movie.Movie;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieService;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationRepository;
 import com.bokeher.cinema.CinemaReservationSystem.room.Room;
 import com.bokeher.cinema.CinemaReservationSystem.room.RoomService;
-import com.bokeher.cinema.CinemaReservationSystem.screening.dto.BriefScreeningResponse;
-import com.bokeher.cinema.CinemaReservationSystem.screening.dto.CreateScreeningRequest;
-import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
-import com.bokeher.cinema.CinemaReservationSystem.screening.dto.UpdateScreeningRequest;
+import com.bokeher.cinema.CinemaReservationSystem.screening.dto.*;
 import com.bokeher.cinema.CinemaReservationSystem.screening.exception.RoomOccupiedException;
 import com.bokeher.cinema.CinemaReservationSystem.screening.exception.ScreeningNotFoundException;
+import com.bokeher.cinema.CinemaReservationSystem.seat.Seat;
+import com.bokeher.cinema.CinemaReservationSystem.seat.SeatMapper;
+import com.bokeher.cinema.CinemaReservationSystem.seat.SeatStatus;
+import com.bokeher.cinema.CinemaReservationSystem.seat.dto.ScreeningSeatResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +27,8 @@ public class ScreeningService {
     private final ScreeningRepository screeningRepository;
     private final MovieService movieService;
     private final RoomService roomService;
+    private final SeatMapper seatMapper;
+    private final ReservationRepository reservationRepository;
 
     public Screening getById(Long id) {
         return screeningRepository.findById(id)
@@ -114,5 +119,31 @@ public class ScreeningService {
 
     public boolean isSeatValid(Long screeningId, Long seatId) {
         return screeningRepository.existsByIdAndRoomSeatsId(screeningId, seatId);
+    }
+
+    public ScreeningSeatMapResponse getScreeningSeatMap(Long id) {
+        Screening screening = getById(id);
+
+        Set<Long> reservedSeatIds = reservationRepository.findReservedSeatIds(screening.getId());
+
+        Room room = screening.getRoom();
+        List<Seat> seats = room.getSeats();
+
+        return ScreeningSeatMapResponse.builder()
+                .screeningId(screening.getId())
+                .roomId(room.getId())
+                .roomName(room.getName())
+                .movieId(screening.getMovie().getId())
+                .movieTitle(screening.getMovie().getTitle())
+                .seats(seats.stream()
+                        .map(seat -> new ScreeningSeatResponse(
+                                seatMapper.toResponse(seat),
+                                reservedSeatIds.contains(seat.getId())
+                                        ? SeatStatus.RESERVED
+                                        : SeatStatus.AVAILABLE
+                        ))
+                        .toList())
+                .build();
+
     }
 }

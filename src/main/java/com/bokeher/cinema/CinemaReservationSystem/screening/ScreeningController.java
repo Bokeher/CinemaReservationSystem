@@ -2,6 +2,7 @@ package com.bokeher.cinema.CinemaReservationSystem.screening;
 
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.BriefScreeningResponse;
 import com.bokeher.cinema.CinemaReservationSystem.screening.dto.DetailedScreeningResponse;
+import com.bokeher.cinema.CinemaReservationSystem.screening.dto.ScreeningSeatMapResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,5 +26,10 @@ public class ScreeningController {
     @GetMapping
     public List<BriefScreeningResponse> getScreenings() {
         return screeningService.findAll();
+    }
+
+    @GetMapping("/{id}/seat-map")
+    public ScreeningSeatMapResponse getScreeningSeatMap(@PathVariable Long id) {
+        return screeningService.getScreeningSeatMap(id);
     }
 }
