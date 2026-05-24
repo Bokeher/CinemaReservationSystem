@@ -12,7 +12,15 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "reservations")
+@Table(
+        name = "reservations",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"screening_id", "seat_id", "active"}
+                )
+        }
+
+)
 public class Reservation {
 
     @Id
@@ -34,4 +42,10 @@ public class Reservation {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ReservationStatus status;
+
+    // Indicates whether the reservation is active (used in database constraint logic)
+    // nullable to allow multiple "cancelled" states
+    // since NULL values can repeat under a unique constraint
+    private Boolean active;
+
 }

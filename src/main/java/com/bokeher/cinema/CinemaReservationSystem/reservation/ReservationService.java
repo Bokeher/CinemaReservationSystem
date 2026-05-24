@@ -10,7 +10,9 @@ import com.bokeher.cinema.CinemaReservationSystem.seat.exception.SeatNotFoundExc
 import com.bokeher.cinema.CinemaReservationSystem.seat.SeatRepository;
 import com.bokeher.cinema.CinemaReservationSystem.security.UserPrincipal;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +40,8 @@ public class ReservationService {
             throw new ReservationAlreadyCancelledException();
         }
 
+        // 'active=null' allows to have multiple cancelled reservations
+        reservation.setActive(null);
         reservation.setStatus(ReservationStatus.CANCELLED);
 
         reservationRepository.save(reservation);
@@ -61,6 +65,7 @@ public class ReservationService {
         reservationRepository.save(reservation);
     }
 
+    @Transactional
     public ReservationResponse createReservation(CreateReservationRequest request, UserPrincipal userPrincipal) {
         Seat seat = seatRepository.findById(request.getSeatId())
                 .orElseThrow(() -> new SeatNotFoundException(request.getSeatId()));
@@ -74,13 +79,18 @@ public class ReservationService {
                 .screening(screening)
                 .status(ReservationStatus.PENDING)
                 .user(user)
+                .active(true)
                 .build();
 
         validateReservation(reservation);
 
-        Reservation savedReservation = reservationRepository.save(reservation);
+        try {
+            Reservation savedReservation = reservationRepository.save(reservation);
 
-        return reservationMapper.toResponse(savedReservation);
+            return reservationMapper.toResponse(savedReservation);
+        } catch (DataIntegrityViolationException ex) {
+            throw new SeatAlreadyTakenException(seat.getId());
+        }
     }
 
     public ReservationResponse findById(Long id, UserPrincipal userPrincipal) {
