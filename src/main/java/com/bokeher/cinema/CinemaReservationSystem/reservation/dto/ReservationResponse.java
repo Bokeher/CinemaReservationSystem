@@ -4,13 +4,12 @@ import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationStatus;
 import com.bokeher.cinema.CinemaReservationSystem.screening.Screening;
 import com.bokeher.cinema.CinemaReservationSystem.seat.Seat;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
-@RequiredArgsConstructor
 @AllArgsConstructor
+@Getter
 @Builder
+@NoArgsConstructor
 public class ReservationResponse {
 
     private Long id;
