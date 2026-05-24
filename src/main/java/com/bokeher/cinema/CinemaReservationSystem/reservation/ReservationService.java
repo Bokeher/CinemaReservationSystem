@@ -102,7 +102,24 @@ public class ReservationService {
     }
 
     private void validateReservation(Reservation reservation) {
+        Long screeningId = reservation.getScreening().getId();
+        Long seatId = reservation.getSeat().getId();
 
+        boolean existsReservation = reservationRepository.existsByScreeningIdAndSeatIdAndStatusIn(
+                screeningId,
+                seatId,
+                List.of(ReservationStatus.PENDING, ReservationStatus.CONFIRMED)
+        );
+
+        if (existsReservation) {
+            throw new SeatAlreadyTakenException(seatId);
+        }
+
+        boolean isSeatValid = screeningService.isSeatValid(screeningId, seatId);
+
+        if (!isSeatValid) {
+            throw new SeatDoesNotBelongToScreeningException(seatId, screeningId);
+        }
     }
 
     private void validateOwnership(Reservation reservation, UserPrincipal userPrincipal) {

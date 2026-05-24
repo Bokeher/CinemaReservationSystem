@@ -107,4 +107,7 @@ public class ScreeningService {
         }
     }
 
+    public boolean isSeatValid(Long screeningId, Long seatId) {
+        return screeningRepository.existsByIdAndRoomSeatsId(screeningId, seatId);
+    }
 }

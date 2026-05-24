@@ -16,4 +16,6 @@ interface ScreeningRepository extends JpaRepository<Screening, Long> {
             AND s.endTime > :startTime
     """)
     boolean existsOverlappingScreening(Long roomId, Long screeningId, LocalDateTime startTime, LocalDateTime endTime);
+
+    boolean existsByIdAndRoomSeatsId(Long screeningId, Long seatId);
 }
