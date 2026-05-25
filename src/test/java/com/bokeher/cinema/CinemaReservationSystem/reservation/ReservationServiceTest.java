@@ -3,6 +3,8 @@ package com.bokeher.cinema.CinemaReservationSystem.reservation;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieMapper;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.CreateReservationRequest;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.ReservationResponse;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.ReservationAccessDeniedException;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.ReservationNotFoundException;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.SeatAlreadyTakenException;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.SeatDoesNotBelongToScreeningException;
 import com.bokeher.cinema.CinemaReservationSystem.room.RoomMapper;
@@ -22,10 +24,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataIntegrityViolationException;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationAssertions.assertCapturedReservation;
 import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationAssertions.assertReservationResponse;
+import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.USER_ID;
 import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.anyUser;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -184,19 +188,76 @@ class ReservationServiceTest {
     }
 
     @Test
+    void findById_shouldReturnReservation() {
+        Reservation reservation = anyReservation()
+                .user(anyUser().id(USER_ID).build())
+                .build();
+
+        userPrincipal = new UserPrincipal(anyUser().id(USER_ID).build());
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        ReservationResponse response = reservationService.findById(RESERVATION_ID, userPrincipal);
+
+        assertReservationResponse(reservation, response);
+    }
+
+    @Test
+    void findById_shouldThrowException_whenReservationDoesNotBelongToUser() {
+        Reservation reservation = anyReservation()
+                .user(anyUser().id(40L).build()                )
+                .build();
+
+        userPrincipal = new UserPrincipal(anyUser().id(USER_ID).build());
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        assertThrows(ReservationAccessDeniedException.class, () -> reservationService.findById(RESERVATION_ID, userPrincipal));
+    }
+
+    @Test
+    void findById_shouldThrowException_whenReservationDoesNotExist() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
+
+        assertThrows(ReservationNotFoundException.class, () -> reservationService.findById(RESERVATION_ID, userPrincipal));
+    }
+
+    @Test
+    void findAllForCurrentUser_shouldReturnAllUserReservations() {
+        List<Reservation> reservations = List.of(
+                anyReservation()
+                        .id(1L)
+                        .build(),
+                anyReservation()
+                        .id(2L)
+                        .build(),
+                anyReservation()
+                        .id(3L)
+                        .build()
+        );
+
+        when(reservationRepository.findAllByUserId(USER_ID)).thenReturn(reservations);
+
+
+        userPrincipal = new UserPrincipal(anyUser().id(USER_ID).build());
+
+        List<ReservationResponse> responses = reservationService.findAllForCurrentUser(userPrincipal);
+
+        assertEquals(3, responses.size());
+        assertReservationResponse(reservations.get(0), responses.get(0));
+        assertReservationResponse(reservations.get(1), responses.get(1));
+        assertReservationResponse(reservations.get(2), responses.get(2));
+    }
+
+
+    @Test
     void cancelReservation() {
+
     }
 
     @Test
     void confirmReservation() {
-    }
 
-    @Test
-    void findById() {
-    }
-
-    @Test
-    void findAllForCurrentUser() {
     }
 
 }
