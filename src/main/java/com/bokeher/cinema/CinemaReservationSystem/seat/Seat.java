@@ -15,7 +15,7 @@ import lombok.Setter;
 @Table(
     name = "seats",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"room_id", "row", "number"})
+        @UniqueConstraint(columnNames = {"room_id", "seat_row", "number"})
     }
 )
 public class Seat {
@@ -34,7 +34,7 @@ public class Seat {
     @JoinColumn(name = "room_id", nullable = false)
     private Room room;
 
-    @Column(nullable = false)
+    @Column(name = "seat_row", nullable = false)
     private int row;
 
     @Column(nullable = false)
