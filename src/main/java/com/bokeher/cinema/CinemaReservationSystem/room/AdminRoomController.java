@@ -2,6 +2,7 @@ package com.bokeher.cinema.CinemaReservationSystem.room;
 
 import com.bokeher.cinema.CinemaReservationSystem.room.dto.CreateRoomRequest;
 import com.bokeher.cinema.CinemaReservationSystem.room.dto.RoomResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,7 +19,7 @@ public class AdminRoomController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public RoomResponse createRoom(@RequestBody CreateRoomRequest request) {
+    public RoomResponse createRoom(@Valid @RequestBody CreateRoomRequest request) {
         return roomService.createRoom(request);
     }
 
