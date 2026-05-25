@@ -3,10 +3,7 @@ package com.bokeher.cinema.CinemaReservationSystem.reservation;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieMapper;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.CreateReservationRequest;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.ReservationResponse;
-import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.ReservationAccessDeniedException;
-import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.ReservationNotFoundException;
-import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.SeatAlreadyTakenException;
-import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.SeatDoesNotBelongToScreeningException;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.exception.*;
 import com.bokeher.cinema.CinemaReservationSystem.room.RoomMapper;
 import com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningMapper;
 import com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningService;
@@ -212,14 +209,20 @@ class ReservationServiceTest {
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
-        assertThrows(ReservationAccessDeniedException.class, () -> reservationService.findById(RESERVATION_ID, userPrincipal));
+        assertThrows(
+                ReservationAccessDeniedException.class,
+                () -> reservationService.findById(RESERVATION_ID, userPrincipal)
+        );
     }
 
     @Test
     void findById_shouldThrowException_whenReservationDoesNotExist() {
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
 
-        assertThrows(ReservationNotFoundException.class, () -> reservationService.findById(RESERVATION_ID, userPrincipal));
+        assertThrows(
+                ReservationNotFoundException.class,
+                () -> reservationService.findById(RESERVATION_ID, userPrincipal)
+        );
     }
 
     @Test
@@ -249,15 +252,133 @@ class ReservationServiceTest {
         assertReservationResponse(reservations.get(2), responses.get(2));
     }
 
-
     @Test
-    void cancelReservation() {
+    void cancelReservation_shouldCancelReservation() {
+        Reservation reservation = anyReservation().build();
 
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        reservationService.cancelReservation(RESERVATION_ID, userPrincipal);
+
+        assertEquals(ReservationStatus.CANCELLED, reservation.getStatus());
+        assertNull(reservation.getActive());
+
+        verify(reservationRepository).save(reservation);
     }
 
     @Test
-    void confirmReservation() {
+    void cancelReservation_shouldThrowException_whenReservationDoesNotExist() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
 
+        assertThrows(
+                ReservationNotFoundException.class,
+                () -> reservationService.cancelReservation(RESERVATION_ID, userPrincipal)
+        );
+    }
+
+    @Test
+    void cancelReservation_shouldThrowException_whenReservationDoesNotBelongToUser() {
+        Reservation reservation = anyReservation()
+                .user(anyUser().id(40L).build())
+                .build();
+
+        userPrincipal = new UserPrincipal(
+                anyUser().id(USER_ID).build()
+        );
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        assertThrows(
+                ReservationAccessDeniedException.class,
+                () -> reservationService.cancelReservation(RESERVATION_ID, userPrincipal)
+        );
+    }
+
+    @Test
+    void cancelReservation_shouldThrowException_whenReservationIsAlreadyCancelled() {
+        Reservation reservation = anyReservation()
+                .status(ReservationStatus.CANCELLED)
+                .active(null)
+                .build();
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        assertThrows(
+                ReservationAlreadyCancelledException.class,
+                () -> reservationService.cancelReservation(RESERVATION_ID, userPrincipal)
+        );
+    }
+
+    @Test
+    void confirmReservation_shouldConfirmReservation() {
+        Reservation reservation = anyReservation().build();
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        reservationService.confirmReservation(RESERVATION_ID, userPrincipal);
+
+        assertEquals(ReservationStatus.CONFIRMED, reservation.getStatus());
+        assertTrue(reservation.getActive());
+
+        verify(reservationRepository).save(reservation);
+    }
+
+    @Test
+    void confirmReservation_shouldThrowException_whenReservationDoesNotExist() {
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.empty());
+
+        assertThrows(
+                ReservationNotFoundException.class,
+                () -> reservationService.confirmReservation(RESERVATION_ID, userPrincipal)
+        );
+    }
+
+    @Test
+    void confirmReservation_shouldThrowException_whenReservationDoesNotBelongToUser() {
+        Reservation reservation = anyReservation()
+                .user(anyUser().id(40L).build())
+                .build();
+
+        userPrincipal = new UserPrincipal(
+                anyUser().id(USER_ID).build()
+        );
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        assertThrows(
+                ReservationAccessDeniedException.class,
+                () -> reservationService.confirmReservation(RESERVATION_ID, userPrincipal)
+        );
+    }
+
+    @Test
+    void confirmReservation_shouldThrowException_whenReservationIsAlreadyConfirmed() {
+        Reservation reservation = anyReservation()
+                .status(ReservationStatus.CONFIRMED)
+                .active(true)
+                .build();
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        assertThrows(
+                ReservationAlreadyConfirmedException.class,
+                () -> reservationService.confirmReservation(RESERVATION_ID, userPrincipal)
+        );
+    }
+
+    @Test
+    void confirmReservation_shouldThrowException_whenTryingToConfirmCancelledReservation() {
+        Reservation reservation = anyReservation()
+                .status(ReservationStatus.CANCELLED)
+                .active(null)
+                .build();
+
+        when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
+
+        assertThrows(
+                ReservationCannotBeConfirmedWhenCancelledException.class,
+                () -> reservationService.confirmReservation(RESERVATION_ID, userPrincipal)
+        );
     }
 
 }
