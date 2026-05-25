@@ -3,6 +3,7 @@ package com.bokeher.cinema.CinemaReservationSystem.reservation;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.CreateReservationRequest;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.ReservationResponse;
 import com.bokeher.cinema.CinemaReservationSystem.security.UserPrincipal;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,7 +33,7 @@ public class ReservationController {
 
     @PostMapping
     public ReservationResponse createReservation(
-            @RequestBody CreateReservationRequest request,
+            @Valid @RequestBody CreateReservationRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
         return reservationService.createReservation(request, userPrincipal);
