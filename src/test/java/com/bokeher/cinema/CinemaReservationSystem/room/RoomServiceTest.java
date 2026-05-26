@@ -48,7 +48,7 @@ class RoomServiceTest {
 
     @Test
     void getById_shouldReturnRoom_whenRoomExists() {
-        Room room = anyRoom().build();
+        Room room = roomWithId().build();
         when(roomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
 
         Room result = roomService.getById(ROOM_ID);
@@ -58,7 +58,7 @@ class RoomServiceTest {
 
     @Test
     void findById_shouldReturnRoomResponse() {
-        Room room = anyRoom().build();
+        Room room = roomWithId().build();
         when(roomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
 
         RoomResponse response = roomService.findById(ROOM_ID);
@@ -78,8 +78,8 @@ class RoomServiceTest {
 
     @Test
     void createRoom_shouldCreateRoom() {
-        Room room = anyRoom().build();
-        CreateRoomRequest createRoomRequest = anyCreateRoomRequest().build();
+        Room room = roomWithId().build();
+        CreateRoomRequest createRoomRequest = createRoomRequest().build();
 
         when(roomRepository.save(any(Room.class))).thenReturn(room);
 
@@ -98,7 +98,7 @@ class RoomServiceTest {
 
     @Test
     void deleteRoom_shouldDeleteRoom() {
-        Room room = anyRoom().build();
+        Room room = roomWithId().build();
         when(roomRepository.findById(ROOM_ID)).thenReturn(Optional.of(room));
 
         roomService.deleteRoom(ROOM_ID);
@@ -120,8 +120,8 @@ class RoomServiceTest {
 
     @Test
     void findAll_shouldReturnListOfResponses_whenRoomsExist() {
-        Room room = anyRoom().build();
-        Room room2 = updatedRoom().build();
+        Room room = roomWithId().build();
+        Room room2 = updatedRoomWithId().build();
 
         when(roomRepository.findAll()).thenReturn(List.of(room, room2));
 

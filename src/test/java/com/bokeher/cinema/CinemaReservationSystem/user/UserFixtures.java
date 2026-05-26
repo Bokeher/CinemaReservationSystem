@@ -12,7 +12,7 @@ public class UserFixtures {
     public static final String ENCODED_PASSWORD = "encoded";
     public static final UserRole ROLE = UserRole.USER;
 
-    public static User.UserBuilder anyUser() {
+    public static User.UserBuilder userWithId() {
         return User.builder()
                 .id(USER_ID)
                 .username(USERNAME)
@@ -21,7 +21,15 @@ public class UserFixtures {
                 .role(ROLE);
     }
 
-    public static CreateUserRequest.CreateUserRequestBuilder anyCreateUserRequest() {
+    public static User.UserBuilder userWithoutId() {
+        return User.builder()
+                .username(USERNAME)
+                .email(EMAIL)
+                .password(ENCODED_PASSWORD)
+                .role(ROLE);
+    }
+
+    public static CreateUserRequest.CreateUserRequestBuilder createUserRequest() {
         return CreateUserRequest.builder()
                 .username(USERNAME)
                 .email(EMAIL)
@@ -29,7 +37,7 @@ public class UserFixtures {
                 .role(ROLE);
     }
 
-    public static UpdateUserRequest.UpdateUserRequestBuilder anyUpdateUserRequest() {
+    public static UpdateUserRequest.UpdateUserRequestBuilder updateUserRequest() {
         return UpdateUserRequest.builder()
                 .username(USERNAME)
                 .email(EMAIL)

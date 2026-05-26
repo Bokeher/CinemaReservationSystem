@@ -58,8 +58,8 @@ class AuthServiceTest {
 
     @Test
     void shouldLoginSuccessfully() {
-        LoginUserRequest request = anyLoginRequest().build();
-        User user = anyUser().build();
+        LoginUserRequest request = loginRequest().build();
+        User user = userWithId().build();
 
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(true);
@@ -72,7 +72,7 @@ class AuthServiceTest {
 
     @Test
     void shouldThrowWhenUserDoesNotExistDuringLogin() {
-        LoginUserRequest request = anyLoginRequest().build();
+        LoginUserRequest request = loginRequest().build();
 
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.empty());
 
@@ -86,8 +86,8 @@ class AuthServiceTest {
 
     @Test
     void shouldThrowWhenPasswordDoesNotMatchDuringLogin() {
-        LoginUserRequest request = anyLoginRequest().build();
-        User user = anyUser().build();
+        LoginUserRequest request = loginRequest().build();
+        User user = userWithId().build();
 
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(passwordEncoder.matches(PASSWORD, ENCODED_PASSWORD)).thenReturn(false);
@@ -100,8 +100,8 @@ class AuthServiceTest {
 
     @Test
     void shouldRegisterUserSuccessfully() {
-        RegisterUserRequest request = anyRegisterRequest().build();
-        User savedUser = anyUser().build();
+        RegisterUserRequest request = registerRequest().build();
+        User savedUser = userWithId().build();
 
         when(userService.createUserInternal(USERNAME, EMAIL, PASSWORD, UserRole.USER)).thenReturn(savedUser);
         when(jwtService.generateToken(any(UserPrincipal.class))).thenReturn(TOKEN);

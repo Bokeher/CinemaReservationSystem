@@ -38,7 +38,7 @@ class MovieServiceTest {
 
     @Test
     void getById_shouldReturnMovie_whenMovieExists() {
-        Movie movie = anyMovie().build();
+        Movie movie = movieWithId().build();
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
 
         Movie result = movieService.getById(MOVIE_ID);
@@ -55,7 +55,7 @@ class MovieServiceTest {
 
     @Test
     void findById_shouldReturnMovieResponse_whenMovieExists() {
-        Movie movie = anyMovie().build();
+        Movie movie = movieWithId().build();
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
 
         MovieResponse response = movieService.findById(MOVIE_ID);
@@ -75,8 +75,8 @@ class MovieServiceTest {
 
     @Test
     void findAll_shouldReturnListOfResponses_whenMoviesExist() {
-        Movie movie = anyMovie().build();
-        Movie movie2 = updatedMovie().build();
+        Movie movie = movieWithId().build();
+        Movie movie2 = updatedMovieWithId().build();
 
         when(movieRepository.findAll()).thenReturn(List.of(movie, movie2));
 
@@ -98,8 +98,8 @@ class MovieServiceTest {
 
     @Test
     void find_shouldReturnAllMovies_whenTitleIsNull() {
-        Movie movie = anyMovie().build();
-        Movie movie2 = updatedMovie().build();
+        Movie movie = movieWithId().build();
+        Movie movie2 = updatedMovieWithId().build();
 
         when(movieRepository.findAll()).thenReturn(List.of(movie, movie2));
 
@@ -113,7 +113,7 @@ class MovieServiceTest {
 
     @Test
     void find_shouldReturnOneMovie_whenTitleNotNull() {
-        Movie movie = anyMovie().build();
+        Movie movie = movieWithId().build();
 
         when(movieRepository.findByTitleContainingIgnoreCase(TITLE))
                 .thenReturn(List.of(movie));
@@ -128,8 +128,8 @@ class MovieServiceTest {
 
     @Test
     void createMovie_shouldCreateMovie_whenTitleDoesNotExist() {
-        CreateMovieRequest request = anyCreateMovieRequest().build();
-        Movie movie = anyMovie().build();
+        CreateMovieRequest request = createMovieRequest().build();
+        Movie movie = movieWithId().build();
 
         when(movieRepository.existsByTitle(TITLE)).thenReturn(false);
         when(movieRepository.save(any())).thenReturn(movie);
@@ -155,7 +155,7 @@ class MovieServiceTest {
 
     @Test
     void createMovie_shouldThrowException_whenTitleExists() {
-        CreateMovieRequest request = anyCreateMovieRequest().build();
+        CreateMovieRequest request = createMovieRequest().build();
 
         when(movieRepository.existsByTitle(TITLE)).thenReturn(true);
 
@@ -167,7 +167,7 @@ class MovieServiceTest {
 
     @Test
     void deleteMovie_shouldDeleteMovie() {
-        Movie movie = anyMovie().build();
+        Movie movie = movieWithId().build();
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
 
         movieService.deleteMovie(MOVIE_ID);
@@ -189,9 +189,9 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldUpdateMovie_whenCompleteRequest() {
-        UpdateMovieRequest request = anyUpdateMovieRequest().build();
-        Movie movie = anyMovie().build();
-        Movie updatedMovie = updatedMovie().build();
+        UpdateMovieRequest request = updateMovieRequest().build();
+        Movie movie = movieWithId().build();
+        Movie updatedMovie = updatedMovieWithId().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
         when(movieRepository.existsByTitle(UPDATED_TITLE)).thenReturn(false);
@@ -217,7 +217,7 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldThrowException_whenMovieDoesNotExist() {
-        UpdateMovieRequest request = anyUpdateMovieRequest().build();
+        UpdateMovieRequest request = updateMovieRequest().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.empty());
 
@@ -232,13 +232,13 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldUpdateWithoutCheckingTitleConflict_whenTitleDidNotChange() {
-        UpdateMovieRequest request = anyUpdateMovieRequest()
+        UpdateMovieRequest request = updateMovieRequest()
                 .title(TITLE)
                 .build();
 
-        Movie movie = anyMovie().build();
+        Movie movie = movieWithId().build();
 
-        Movie updatedMovie = updatedMovie()
+        Movie updatedMovie = updatedMovieWithId()
                 .title(TITLE)
                 .build();
 
@@ -254,8 +254,8 @@ class MovieServiceTest {
 
     @Test
     void updateMovie_shouldThrowException_whenExistsMovieWithSameTitle() {
-        Movie movie = anyMovie().build();
-        UpdateMovieRequest request = anyUpdateMovieRequest().build();
+        Movie movie = movieWithId().build();
+        UpdateMovieRequest request = updateMovieRequest().build();
 
         when(movieRepository.findById(MOVIE_ID)).thenReturn(Optional.of(movie));
         when(movieRepository.existsByTitle(UPDATED_TITLE)).thenReturn(true);

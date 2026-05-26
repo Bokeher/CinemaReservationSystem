@@ -37,7 +37,7 @@ class UserServiceTest {
 
     @Test
     void shouldFindUserById() {
-        User user = anyUser().build();
+        User user = userWithId().build();
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
 
         UserResponse result = userService.findById(USER_ID);
@@ -57,7 +57,7 @@ class UserServiceTest {
 
     @Test
     void shouldFindUserByUsername() {
-        User user = anyUser().build();
+        User user = userWithId().build();
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
 
         UserResponse result = userService.findByUsername(USERNAME);
@@ -77,7 +77,7 @@ class UserServiceTest {
 
     @Test
     void shouldDeleteUser() {
-        User user = anyUser().build();
+        User user = userWithId().build();
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
 
         userService.deleteUser(USER_ID);
@@ -97,7 +97,7 @@ class UserServiceTest {
 
     @Test
     void shouldCreateUserInternal() {
-        User user = anyUser().build();
+        User user = userWithId().build();
 
         when(userRepository.existsByUsername(USERNAME)).thenReturn(false);
         when(userRepository.existsByEmail(EMAIL)).thenReturn(false);

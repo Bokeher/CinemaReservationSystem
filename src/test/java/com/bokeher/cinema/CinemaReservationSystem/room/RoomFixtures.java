@@ -17,7 +17,7 @@ public class RoomFixtures {
 
     private static final RoomSeatGenerator ROOM_SEAT_GENERATOR = new RoomSeatGenerator();
 
-    public static Room.RoomBuilder anyRoom() {
+    public static Room.RoomBuilder roomWithId() {
         Room room = Room.builder()
                 .id(ROOM_ID)
                 .name(ROOM_NAME)
@@ -29,7 +29,7 @@ public class RoomFixtures {
         return room.toBuilder();
     }
 
-    public static Room.RoomBuilder updatedRoom() {
+    public static Room.RoomBuilder updatedRoomWithId() {
         Room room = Room.builder()
                 .id(UPDATED_ROOM_ID)
                 .name(UPDATED_ROOM_NAME)
@@ -41,7 +41,7 @@ public class RoomFixtures {
         return room.toBuilder();
     }
 
-    public static CreateRoomRequest.CreateRoomRequestBuilder anyCreateRoomRequest() {
+    public static CreateRoomRequest.CreateRoomRequestBuilder createRoomRequest() {
         return CreateRoomRequest.builder()
                 .name(ROOM_NAME)
                 .seatsPerRow(SEATS_PER_ROW);

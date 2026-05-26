@@ -67,7 +67,7 @@ class ScreeningServiceTest {
 
     @Test
     void getById_shouldReturnScreening_whenScreeningExists() {
-        Screening screening = anyScreening().build();
+        Screening screening = screeningWithId().build();
         when(screeningRepository.findById(SCREENING_ID)).thenReturn(Optional.of(screening));
 
         Screening result = screeningService.getById(SCREENING_ID);
@@ -84,7 +84,7 @@ class ScreeningServiceTest {
 
     @Test
     void findById_shouldReturnScreeningResponse() {
-        Screening screening = anyScreening().build();
+        Screening screening = screeningWithId().build();
         when(screeningRepository.findById(SCREENING_ID)).thenReturn(Optional.of(screening));
 
         DetailedScreeningResponse response = screeningService.findById(SCREENING_ID);
@@ -104,7 +104,7 @@ class ScreeningServiceTest {
 
     @Test
     void deleteScreening_shouldDeleteScreening() {
-        Screening screening = anyScreening().build();
+        Screening screening = screeningWithId().build();
         when(screeningRepository.findById(SCREENING_ID)).thenReturn(Optional.of(screening));
 
         screeningService.deleteScreening(SCREENING_ID);
@@ -114,12 +114,12 @@ class ScreeningServiceTest {
 
     @Test
     void createScreening_shouldCreateScreening() {
-        CreateScreeningRequest request = anyCreateScreeningRequest().build();
+        CreateScreeningRequest request = createScreeningRequest().build();
 
-        Movie movie = anyMovie().build();
-        Room room = anyRoom().build();
+        Movie movie = movieWithId().build();
+        Room room = roomWithId().build();
 
-        Screening screening = anyScreening().build();
+        Screening screening = screeningWithId().build();
 
         when(movieService.getById(MOVIE_ID)).thenReturn(movie);
         when(roomService.getById(ROOM_ID)).thenReturn(room);
@@ -147,10 +147,10 @@ class ScreeningServiceTest {
 
     @Test
     void createScreening_shouldThrowException_whenRoomIsOccupied() {
-        CreateScreeningRequest request = anyCreateScreeningRequest().build();
+        CreateScreeningRequest request = createScreeningRequest().build();
 
-        Movie movie = anyMovie().build();
-        Room room = anyRoom().build();
+        Movie movie = movieWithId().build();
+        Room room = roomWithId().build();
 
         when(movieService.getById(MOVIE_ID)).thenReturn(movie);
         when(roomService.getById(ROOM_ID)).thenReturn(room);
@@ -166,10 +166,10 @@ class ScreeningServiceTest {
 
     @Test
     void updateScreening_shouldUpdateScreening() {
-        UpdateScreeningRequest request = anyUpdateScreeningRequest().build();
+        UpdateScreeningRequest request = updateScreeningRequest().build();
 
-        Screening screening = anyScreening().build();
-        Screening updated = updatedScreening().build();
+        Screening screening = screeningWithId().build();
+        Screening updated = updatedScreeningWithId().build();
 
         when(screeningRepository.findById(SCREENING_ID)).thenReturn(Optional.of(screening));
         when(movieService.getById(UPDATED_MOVIE_ID)).thenReturn(updated.getMovie());
@@ -191,7 +191,7 @@ class ScreeningServiceTest {
 
     @Test
     void updateScreening_shouldThrowException_whenScreeningDoesNotExist() {
-        UpdateScreeningRequest request = anyUpdateScreeningRequest().build();
+        UpdateScreeningRequest request = updateScreeningRequest().build();
 
         when(screeningRepository.findById(SCREENING_ID)).thenReturn(Optional.empty());
 
@@ -205,13 +205,13 @@ class ScreeningServiceTest {
 
     @Test
     void updateScreening_shouldThrowException_whenRoomIsOccupied() {
-        UpdateScreeningRequest request = anyUpdateScreeningRequest().build();
+        UpdateScreeningRequest request = updateScreeningRequest().build();
 
-        Screening screening = anyScreening().build();
+        Screening screening = screeningWithId().build();
 
         when(screeningRepository.findById(SCREENING_ID)).thenReturn(Optional.of(screening));
-        when(movieService.getById(UPDATED_MOVIE_ID)).thenReturn(updatedMovie().build());
-        when(roomService.getById(UPDATED_ROOM_ID)).thenReturn(updatedRoom().build());
+        when(movieService.getById(UPDATED_MOVIE_ID)).thenReturn(updatedMovieWithId().build());
+        when(roomService.getById(UPDATED_ROOM_ID)).thenReturn(updatedRoomWithId().build());
         when(screeningRepository.existsOverlappingScreening(
                 any(), any(), any(), any()
         )).thenReturn(true);
@@ -224,8 +224,8 @@ class ScreeningServiceTest {
 
     @Test
     void findAll_shouldReturnListOfScreeningResponses() {
-        Screening screening = anyScreening().build();
-        Screening screening2 = updatedScreening().build();
+        Screening screening = screeningWithId().build();
+        Screening screening2 = updatedScreeningWithId().build();
 
         when(screeningRepository.findAll()).thenReturn(List.of(screening, screening2));
 

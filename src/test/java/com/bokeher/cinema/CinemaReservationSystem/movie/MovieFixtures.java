@@ -19,7 +19,7 @@ public class MovieFixtures {
     public static final int UPDATED_REQUIRED_AGE = 16;
     public static final int UPDATED_DURATION_MINUTES = 169;
 
-    public static Movie.MovieBuilder anyMovie() {
+    public static Movie.MovieBuilder movieWithId() {
         return Movie.builder()
                 .id(MOVIE_ID)
                 .title(TITLE)
@@ -28,7 +28,7 @@ public class MovieFixtures {
                 .duration(Duration.ofMinutes(DURATION_MINUTES));
     }
 
-    public static Movie.MovieBuilder updatedMovie() {
+    public static Movie.MovieBuilder updatedMovieWithId() {
         return Movie.builder()
                 .id(UPDATED_MOVIE_ID)
                 .title(UPDATED_TITLE)
@@ -37,7 +37,7 @@ public class MovieFixtures {
                 .duration(Duration.ofMinutes(UPDATED_DURATION_MINUTES));
     }
 
-    public static CreateMovieRequest.CreateMovieRequestBuilder anyCreateMovieRequest() {
+    public static CreateMovieRequest.CreateMovieRequestBuilder createMovieRequest() {
         return CreateMovieRequest.builder()
                 .title(TITLE)
                 .description(DESCRIPTION)
@@ -45,7 +45,7 @@ public class MovieFixtures {
                 .durationMinutes(DURATION_MINUTES);
     }
 
-    public static UpdateMovieRequest.UpdateMovieRequestBuilder anyUpdateMovieRequest() {
+    public static UpdateMovieRequest.UpdateMovieRequestBuilder updateMovieRequest() {
         return UpdateMovieRequest.builder()
                 .title(UPDATED_TITLE)
                 .description(UPDATED_DESCRIPTION)

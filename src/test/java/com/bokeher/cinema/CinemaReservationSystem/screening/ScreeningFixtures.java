@@ -20,9 +20,9 @@ public class ScreeningFixtures {
     public static final LocalDateTime UPDATED_START_TIME =
             LocalDateTime.of(2024, 6, 1, 15, 0);
 
-    public static Screening.ScreeningBuilder anyScreening() {
-        Movie movie = anyMovie().build();
-        Room room = anyRoom().build();
+    public static Screening.ScreeningBuilder screeningWithId() {
+        Movie movie = movieWithId().build();
+        Room room = roomWithId().build();
 
         return Screening.builder()
                 .id(SCREENING_ID)
@@ -32,9 +32,9 @@ public class ScreeningFixtures {
                 .endTime(START_TIME.plusMinutes(movie.getDuration().toMinutes()));
     }
 
-    public static Screening.ScreeningBuilder updatedScreening() {
-        Movie movie = updatedMovie().build();
-        Room room = updatedRoom().build();
+    public static Screening.ScreeningBuilder updatedScreeningWithId() {
+        Movie movie = updatedMovieWithId().build();
+        Room room = updatedRoomWithId().build();
 
         return Screening.builder()
                 .id(SCREENING_ID)
@@ -44,14 +44,14 @@ public class ScreeningFixtures {
                 .endTime(UPDATED_START_TIME.plusMinutes(movie.getDuration().toMinutes()));
     }
 
-    public static CreateScreeningRequest.CreateScreeningRequestBuilder anyCreateScreeningRequest() {
+    public static CreateScreeningRequest.CreateScreeningRequestBuilder createScreeningRequest() {
         return CreateScreeningRequest.builder()
                 .movieId(MOVIE_ID)
                 .roomId(ROOM_ID)
                 .startTime(START_TIME);
     }
 
-    public static UpdateScreeningRequest.UpdateScreeningRequestBuilder anyUpdateScreeningRequest() {
+    public static UpdateScreeningRequest.UpdateScreeningRequestBuilder updateScreeningRequest() {
         return UpdateScreeningRequest.builder()
                 .movieId(UPDATED_MOVIE_ID)
                 .roomId(UPDATED_ROOM_ID)

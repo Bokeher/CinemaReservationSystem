@@ -8,14 +8,14 @@ import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.*;
 public class AuthFixtures {
     public static final String TOKEN = "token";
 
-    public static RegisterUserRequest.RegisterUserRequestBuilder anyRegisterRequest() {
+    public static RegisterUserRequest.RegisterUserRequestBuilder registerRequest() {
         return RegisterUserRequest.builder()
                 .username(USERNAME)
                 .email(EMAIL)
                 .password(PASSWORD);
     }
 
-    public static LoginUserRequest.LoginUserRequestBuilder anyLoginRequest() {
+    public static LoginUserRequest.LoginUserRequestBuilder loginRequest() {
         return LoginUserRequest.builder()
                 .username(USERNAME)
                 .password(PASSWORD);

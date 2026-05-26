@@ -7,8 +7,8 @@ import com.bokeher.cinema.CinemaReservationSystem.seat.Seat;
 
 import java.util.List;
 
-import static com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningFixtures.anyScreening;
-import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.anyUser;
+import static com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningFixtures.screeningWithId;
+import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.userWithId;
 
 public class ReservationFixtures {
 
@@ -17,22 +17,22 @@ public class ReservationFixtures {
     public static final List<ReservationStatus> ACTIVE_STATUSES =
             List.of(ReservationStatus.PENDING, ReservationStatus.CONFIRMED);
 
-    public static Reservation.ReservationBuilder anyReservation() {
-        Screening screening = anyScreening().build();
+    public static Reservation.ReservationBuilder reservationWithId() {
+        Screening screening = screeningWithId().build();
         Room room = screening.getRoom();
         Seat seat = room.getSeats().get(0);
 
         return Reservation.builder()
                 .id(RESERVATION_ID)
-                .user(anyUser().build())
+                .user(userWithId().build())
                 .screening(screening)
                 .seat(seat)
                 .status(ReservationStatus.PENDING)
                 .active(true);
     }
 
-    public static CreateReservationRequest.CreateReservationRequestBuilder anyCreateReservationRequest() {
-        Screening screening = anyScreening().build();
+    public static CreateReservationRequest.CreateReservationRequestBuilder createReservationRequest() {
+        Screening screening = screeningWithId().build();
         Room room = screening.getRoom();
         Seat seat = room.getSeats().get(0);
 

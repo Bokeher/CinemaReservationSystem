@@ -27,7 +27,7 @@ import java.util.Optional;
 import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationAssertions.assertCapturedReservation;
 import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationAssertions.assertReservationResponse;
 import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.USER_ID;
-import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.anyUser;
+import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.userWithId;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationFixtures.*;
@@ -65,13 +65,13 @@ class ReservationServiceTest {
                 )
         );
 
-        userPrincipal = new UserPrincipal(anyUser().build());
+        userPrincipal = new UserPrincipal(userWithId().build());
     }
 
     @Test
     void createReservation_shouldCreateReservation() {
-        Reservation reservation = anyReservation().build();
-        CreateReservationRequest request = anyCreateReservationRequest().build();
+        Reservation reservation = reservationWithId().build();
+        CreateReservationRequest request = createReservationRequest().build();
 
         when(seatRepository.findById(request.getSeatId())).thenReturn(Optional.of(reservation.getSeat()));
         when(screeningService.getById(request.getScreeningId())).thenReturn(reservation.getScreening());
@@ -98,7 +98,7 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldThrowException_whenSeatDoesNotExist() {
-        CreateReservationRequest request = anyCreateReservationRequest().build();
+        CreateReservationRequest request = createReservationRequest().build();
 
         when(seatRepository.findById(request.getSeatId())).thenReturn(Optional.empty());
 
@@ -110,8 +110,8 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldThrowException_whenScreeningDoesNotExist() {
-        Reservation reservation = anyReservation().build();
-        CreateReservationRequest request = anyCreateReservationRequest().build();
+        Reservation reservation = reservationWithId().build();
+        CreateReservationRequest request = createReservationRequest().build();
 
         when(seatRepository.findById(request.getSeatId())).thenReturn(Optional.of(reservation.getSeat()));
         when(screeningService.getById(request.getScreeningId()))
@@ -125,8 +125,8 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldThrowException_whenSeatTaken() {
-        Reservation reservation = anyReservation().build();
-        CreateReservationRequest request = anyCreateReservationRequest().build();
+        Reservation reservation = reservationWithId().build();
+        CreateReservationRequest request = createReservationRequest().build();
 
         when(seatRepository.findById(request.getSeatId())).thenReturn(Optional.of(reservation.getSeat()));
         when(screeningService.getById(request.getScreeningId())).thenReturn(reservation.getScreening());
@@ -144,8 +144,8 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldThrowException_whenSeatDoesNotBelongToTheScreening() {
-        Reservation reservation = anyReservation().build();
-        CreateReservationRequest request = anyCreateReservationRequest().build();
+        Reservation reservation = reservationWithId().build();
+        CreateReservationRequest request = createReservationRequest().build();
 
         when(seatRepository.findById(request.getSeatId())).thenReturn(Optional.of(reservation.getSeat()));
         when(screeningService.getById(request.getScreeningId())).thenReturn(reservation.getScreening());
@@ -164,8 +164,8 @@ class ReservationServiceTest {
 
     @Test
     void createReservation_shouldThrowSeatAlreadyTakenException_whenDBThrowsDataIntegrityViolationException() {
-        Reservation reservation = anyReservation().build();
-        CreateReservationRequest request = anyCreateReservationRequest().build();
+        Reservation reservation = reservationWithId().build();
+        CreateReservationRequest request = createReservationRequest().build();
 
         when(seatRepository.findById(request.getSeatId())).thenReturn(Optional.of(reservation.getSeat()));
         when(screeningService.getById(request.getScreeningId())).thenReturn(reservation.getScreening());
@@ -186,11 +186,11 @@ class ReservationServiceTest {
 
     @Test
     void findById_shouldReturnReservation() {
-        Reservation reservation = anyReservation()
-                .user(anyUser().id(USER_ID).build())
+        Reservation reservation = reservationWithId()
+                .user(userWithId().id(USER_ID).build())
                 .build();
 
-        userPrincipal = new UserPrincipal(anyUser().id(USER_ID).build());
+        userPrincipal = new UserPrincipal(userWithId().id(USER_ID).build());
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
@@ -201,11 +201,11 @@ class ReservationServiceTest {
 
     @Test
     void findById_shouldThrowException_whenReservationDoesNotBelongToUser() {
-        Reservation reservation = anyReservation()
-                .user(anyUser().id(40L).build()                )
+        Reservation reservation = reservationWithId()
+                .user(userWithId().id(40L).build()                )
                 .build();
 
-        userPrincipal = new UserPrincipal(anyUser().id(USER_ID).build());
+        userPrincipal = new UserPrincipal(userWithId().id(USER_ID).build());
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
@@ -228,13 +228,13 @@ class ReservationServiceTest {
     @Test
     void findAllForCurrentUser_shouldReturnAllUserReservations() {
         List<Reservation> reservations = List.of(
-                anyReservation()
+                reservationWithId()
                         .id(1L)
                         .build(),
-                anyReservation()
+                reservationWithId()
                         .id(2L)
                         .build(),
-                anyReservation()
+                reservationWithId()
                         .id(3L)
                         .build()
         );
@@ -242,7 +242,7 @@ class ReservationServiceTest {
         when(reservationRepository.findAllByUserId(USER_ID)).thenReturn(reservations);
 
 
-        userPrincipal = new UserPrincipal(anyUser().id(USER_ID).build());
+        userPrincipal = new UserPrincipal(userWithId().id(USER_ID).build());
 
         List<ReservationResponse> responses = reservationService.findAllForCurrentUser(userPrincipal);
 
@@ -254,7 +254,7 @@ class ReservationServiceTest {
 
     @Test
     void cancelReservation_shouldCancelReservation() {
-        Reservation reservation = anyReservation().build();
+        Reservation reservation = reservationWithId().build();
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
@@ -278,12 +278,12 @@ class ReservationServiceTest {
 
     @Test
     void cancelReservation_shouldThrowException_whenReservationDoesNotBelongToUser() {
-        Reservation reservation = anyReservation()
-                .user(anyUser().id(40L).build())
+        Reservation reservation = reservationWithId()
+                .user(userWithId().id(40L).build())
                 .build();
 
         userPrincipal = new UserPrincipal(
-                anyUser().id(USER_ID).build()
+                userWithId().id(USER_ID).build()
         );
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
@@ -296,7 +296,7 @@ class ReservationServiceTest {
 
     @Test
     void cancelReservation_shouldThrowException_whenReservationIsAlreadyCancelled() {
-        Reservation reservation = anyReservation()
+        Reservation reservation = reservationWithId()
                 .status(ReservationStatus.CANCELLED)
                 .active(null)
                 .build();
@@ -311,7 +311,7 @@ class ReservationServiceTest {
 
     @Test
     void confirmReservation_shouldConfirmReservation() {
-        Reservation reservation = anyReservation().build();
+        Reservation reservation = reservationWithId().build();
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
 
@@ -335,12 +335,12 @@ class ReservationServiceTest {
 
     @Test
     void confirmReservation_shouldThrowException_whenReservationDoesNotBelongToUser() {
-        Reservation reservation = anyReservation()
-                .user(anyUser().id(40L).build())
+        Reservation reservation = reservationWithId()
+                .user(userWithId().id(40L).build())
                 .build();
 
         userPrincipal = new UserPrincipal(
-                anyUser().id(USER_ID).build()
+                userWithId().id(USER_ID).build()
         );
 
         when(reservationRepository.findById(RESERVATION_ID)).thenReturn(Optional.of(reservation));
@@ -353,7 +353,7 @@ class ReservationServiceTest {
 
     @Test
     void confirmReservation_shouldThrowException_whenReservationIsAlreadyConfirmed() {
-        Reservation reservation = anyReservation()
+        Reservation reservation = reservationWithId()
                 .status(ReservationStatus.CONFIRMED)
                 .active(true)
                 .build();
@@ -368,7 +368,7 @@ class ReservationServiceTest {
 
     @Test
     void confirmReservation_shouldThrowException_whenTryingToConfirmCancelledReservation() {
-        Reservation reservation = anyReservation()
+        Reservation reservation = reservationWithId()
                 .status(ReservationStatus.CANCELLED)
                 .active(null)
                 .build();
