@@ -1,10 +1,11 @@
 package com.bokeher.cinema.CinemaReservationSystem;
 
+import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.bokeher.cinema.CinemaReservationSystem.auth.AuthFixtures.loginRequest;
+import static com.bokeher.cinema.CinemaReservationSystem.auth.AuthFixtures.registerRequest;
 import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.*;
-import static com.bokeher.cinema.CinemaReservationSystem.auth.AuthFixtures.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class AuthIntegrationTest extends BaseIntegrationTest {
 
@@ -30,28 +32,30 @@ class AuthIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void register_shouldCreateUserAndReturnToken() throws Exception {
+    void register_shouldCreateUserAndReturnToken() {
         RegisterUserRequest request = registerRequest().build();
 
-        ResponseEntity<String> response = testRestTemplate.postForEntity(
+        ResponseEntity<AuthResponse> response = testRestTemplate.postForEntity(
                 "/auth/register",
                 request,
-                String.class
+                AuthResponse.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        JsonNode body = objectMapper.readTree(response.getBody());
+        AuthResponse body = response.getBody();
 
-        assertThat(body.get("token").asText()).isNotBlank();
-        assertThat(body.get("user").get("username").asText()).isEqualTo(USERNAME);
-        assertThat(body.get("user").get("email").asText()).isEqualTo(EMAIL);
-        assertThat(body.get("user").get("role").asText()).isEqualTo("USER");
-        assertThat(body.get("user").has("password")).isFalse();
+        assertThat(body).isNotNull();
+        assertThat(body.getToken()).isNotBlank();
+
+        assertThat(body.getUser()).isNotNull();
+        assertThat(body.getUser().getUsername()).isEqualTo(USERNAME);
+        assertThat(body.getUser().getEmail()).isEqualTo(EMAIL);
+        assertThat(body.getUser().getRole()).isEqualTo(UserRole.USER);
     }
 
     @Test
-    void login_shouldLoginUserAndReturnToken() throws Exception {
+    void login_shouldLoginUserAndReturnToken() {
         User user = userWithoutId()
                 .password(passwordEncoder.encode(PASSWORD))
                 .build();
@@ -60,20 +64,22 @@ class AuthIntegrationTest extends BaseIntegrationTest {
 
         LoginUserRequest request = loginRequest().build();
 
-        ResponseEntity<String> response = testRestTemplate.postForEntity(
+        ResponseEntity<AuthResponse> response = testRestTemplate.postForEntity(
                 "/auth/login",
                 request,
-                String.class
+                AuthResponse.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        JsonNode body = objectMapper.readTree(response.getBody());
+        AuthResponse body = response.getBody();
 
-        assertThat(body.get("token").asText()).isNotBlank();
-        assertThat(body.get("user").get("username").asText()).isEqualTo(USERNAME);
-        assertThat(body.get("user").get("email").asText()).isEqualTo(EMAIL);
-        assertThat(body.get("user").has("password")).isFalse();
+        assertThat(body).isNotNull();
+        assertThat(body.getToken()).isNotBlank();
+
+        assertThat(body.getUser()).isNotNull();
+        assertThat(body.getUser().getUsername()).isEqualTo(USERNAME);
+        assertThat(body.getUser().getEmail()).isEqualTo(EMAIL);
     }
 
     @Test
