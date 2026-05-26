@@ -75,4 +75,44 @@ class AuthIntegrationTest extends BaseIntegrationTest {
         assertThat(body.get("user").get("email").asText()).isEqualTo(EMAIL);
         assertThat(body.get("user").has("password")).isFalse();
     }
+
+    @Test
+    void login_shouldThrowException_whenProvidedWrongPassword() {
+        User user = userWithoutId()
+                .password(passwordEncoder.encode("CORRECT_PASSWORD"))
+                .build();
+
+        userRepository.save(user);
+
+        LoginUserRequest request = loginRequest()
+                .password("WRONG_PASSWORD")
+                .build();
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/auth/login",
+                request,
+                String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        assertThat(response.getBody())
+                .isEqualTo("Invalid username or password");
+    }
+
+    @Test
+    void login_shouldThrowException_whenNoSuchUserInDb() {
+        LoginUserRequest request = loginRequest().build();
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/auth/login",
+                request,
+                String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        assertThat(response.getBody())
+                .isEqualTo("Invalid username or password");
+    }
 }
