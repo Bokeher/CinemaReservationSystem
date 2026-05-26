@@ -1,5 +1,6 @@
 package com.bokeher.cinema.CinemaReservationSystem;
 
+import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static com.bokeher.cinema.CinemaReservationSystem.auth.AuthFixtures.*;
 
 class AuthIntegrationTest extends BaseIntegrationTest {
 
@@ -23,16 +25,8 @@ class AuthIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void registerShouldCreateUserAndReturnToken() throws Exception {
-        final String USERNAME = "adam";
-        final String EMAIL = "adam@example.com";
-        final String PASSWORD = "password123";
-
-        var request = Map.of(
-                "username", USERNAME,
-                "email", EMAIL,
-                "password", PASSWORD
-        );
+    void register_shouldCreateUserAndReturnToken() throws Exception {
+        RegisterUserRequest request = registerRequest().build();
 
         ResponseEntity<String> response = testRestTemplate.postForEntity(
                 "/auth/register",
@@ -43,6 +37,7 @@ class AuthIntegrationTest extends BaseIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
 
         JsonNode body = objectMapper.readTree(response.getBody());
+
         assertThat(body.get("token").asText()).isNotBlank();
         assertThat(body.get("user").get("username").asText()).isEqualTo(USERNAME);
         assertThat(body.get("user").get("email").asText()).isEqualTo(EMAIL);
