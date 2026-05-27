@@ -29,6 +29,13 @@ public class Room {
     private List<Seat> seats = new ArrayList<>();
 
     public void addSeat(Seat seat) {
+        seat.setRoom(this);
         seats.add(seat);
+    }
+
+    @PrePersist
+    @PreUpdate
+    private void synchronizeSeatRoomReferences() {
+        seats.forEach(seat -> seat.setRoom(this));
     }
 }
