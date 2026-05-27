@@ -32,6 +32,17 @@ public class ScreeningFixtures {
                 .endTime(START_TIME.plusMinutes(movie.getDuration().toMinutes()));
     }
 
+    public static Screening.ScreeningBuilder screeningWithoutId() {
+        Movie movie = movieWithoutId().build();
+        Room room = roomWithoutId().build();
+
+        return Screening.builder()
+                .movie(movie)
+                .room(room)
+                .startTime(START_TIME)
+                .endTime(START_TIME.plusMinutes(movie.getDuration().toMinutes()));
+    }
+
     public static Screening.ScreeningBuilder updatedScreeningWithId() {
         Movie movie = updatedMovieWithId().build();
         Room room = updatedRoomWithId().build();

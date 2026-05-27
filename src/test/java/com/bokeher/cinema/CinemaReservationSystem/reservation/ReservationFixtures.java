@@ -8,6 +8,7 @@ import com.bokeher.cinema.CinemaReservationSystem.seat.Seat;
 import java.util.List;
 
 import static com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningFixtures.screeningWithId;
+import static com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningFixtures.screeningWithoutId;
 import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.userWithId;
 
 public class ReservationFixtures {
@@ -24,6 +25,19 @@ public class ReservationFixtures {
 
         return Reservation.builder()
                 .id(RESERVATION_ID)
+                .user(userWithId().build())
+                .screening(screening)
+                .seat(seat)
+                .status(ReservationStatus.PENDING)
+                .active(true);
+    }
+
+    public static Reservation.ReservationBuilder reservationWithoutId() {
+        Screening screening = screeningWithoutId().build();
+        Room room = screening.getRoom();
+        Seat seat = room.getSeats().get(0);
+
+        return Reservation.builder()
                 .user(userWithId().build())
                 .screening(screening)
                 .seat(seat)

@@ -28,6 +28,14 @@ public class MovieFixtures {
                 .duration(Duration.ofMinutes(DURATION_MINUTES));
     }
 
+    public static Movie.MovieBuilder movieWithoutId() {
+        return Movie.builder()
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .requiredAge(REQUIRED_AGE)
+                .duration(Duration.ofMinutes(DURATION_MINUTES));
+    }
+
     public static Movie.MovieBuilder updatedMovieWithId() {
         return Movie.builder()
                 .id(UPDATED_MOVIE_ID)

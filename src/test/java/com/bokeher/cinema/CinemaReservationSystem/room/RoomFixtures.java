@@ -29,6 +29,17 @@ public class RoomFixtures {
         return room.toBuilder();
     }
 
+    public static Room.RoomBuilder roomWithoutId() {
+        Room room = Room.builder()
+                .name(ROOM_NAME)
+                .seats(new ArrayList<>())
+                .build();
+
+        ROOM_SEAT_GENERATOR.generate(room, SEATS_PER_ROW);
+
+        return room.toBuilder();
+    }
+
     public static Room.RoomBuilder updatedRoomWithId() {
         Room room = Room.builder()
                 .id(UPDATED_ROOM_ID)
