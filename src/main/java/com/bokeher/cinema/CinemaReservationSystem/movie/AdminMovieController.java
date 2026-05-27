@@ -18,6 +18,7 @@ public class AdminMovieController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public MovieResponse createMovie(@Valid @RequestBody CreateMovieRequest request) {
         return movieService.createMovie(request);
     }

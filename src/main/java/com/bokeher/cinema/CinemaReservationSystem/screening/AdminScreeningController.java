@@ -18,6 +18,7 @@ public class AdminScreeningController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public DetailedScreeningResponse createScreening(@Valid @RequestBody CreateScreeningRequest request) {
         return screeningService.createScreening(request);
     }

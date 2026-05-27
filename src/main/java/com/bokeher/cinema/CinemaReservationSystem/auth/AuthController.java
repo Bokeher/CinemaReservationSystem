@@ -5,10 +5,8 @@ import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -18,10 +16,10 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public AuthResponse createUser(@Valid @RequestBody RegisterUserRequest registerUserRequest) {
         return authService.register(registerUserRequest);
     }
-
 
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody LoginUserRequest loginUserRequest) {

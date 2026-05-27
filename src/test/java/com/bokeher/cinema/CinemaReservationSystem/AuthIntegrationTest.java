@@ -41,7 +41,7 @@ class AuthIntegrationTest extends BaseIntegrationTest {
                 AuthResponse.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
         AuthResponse body = response.getBody();
 

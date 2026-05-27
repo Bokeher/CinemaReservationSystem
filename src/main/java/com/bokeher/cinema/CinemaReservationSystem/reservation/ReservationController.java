@@ -32,6 +32,7 @@ public class ReservationController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ReservationResponse createReservation(
             @Valid @RequestBody CreateReservationRequest request,
             @AuthenticationPrincipal UserPrincipal userPrincipal
