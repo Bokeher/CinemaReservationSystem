@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 
-interface ScreeningRepository extends JpaRepository<Screening, Long> {
+public interface ScreeningRepository extends JpaRepository<Screening, Long> {
 
     @Query("""
         SELECT COUNT(s) > 0
