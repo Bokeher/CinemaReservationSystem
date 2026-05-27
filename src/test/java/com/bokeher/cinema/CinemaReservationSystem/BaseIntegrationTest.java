@@ -1,6 +1,12 @@
 package com.bokeher.cinema.CinemaReservationSystem;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.bokeher.cinema.CinemaReservationSystem.movie.MovieRepository;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationRepository;
+import com.bokeher.cinema.CinemaReservationSystem.room.RoomRepository;
+import com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningRepository;
+import com.bokeher.cinema.CinemaReservationSystem.seat.SeatRepository;
+import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -20,7 +26,27 @@ abstract class BaseIntegrationTest {
     protected TestRestTemplate testRestTemplate;
 
     @Autowired
-    protected ObjectMapper objectMapper;
+    private ReservationRepository reservationRepository;
+    @Autowired
+    private ScreeningRepository screeningRepository;
+    @Autowired
+    private SeatRepository seatRepository;
+    @Autowired
+    private RoomRepository roomRepository;
+    @Autowired
+    private MovieRepository movieRepository;
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    void cleanDb() {
+        reservationRepository.deleteAll();
+        screeningRepository.deleteAll();
+        seatRepository.deleteAll();
+        roomRepository.deleteAll();
+        movieRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @TestConfiguration(proxyBeanMethods = false)
     static class TestcontainersConfiguration {

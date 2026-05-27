@@ -6,7 +6,6 @@ import com.bokeher.cinema.CinemaReservationSystem.auth.dto.RegisterUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.user.User;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +24,6 @@ class AuthIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @BeforeEach
-    void cleanUsers() {
-        userRepository.deleteAll();
-    }
 
     @Test
     void register_shouldCreateUserAndReturnToken() {
