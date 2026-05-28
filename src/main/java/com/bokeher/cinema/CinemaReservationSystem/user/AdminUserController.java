@@ -17,6 +17,18 @@ public class AdminUserController {
     private final UserService userService;
 
     @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{id}")
+    public UserResponse getById(@PathVariable long id) {
+        return userService.findById(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping
+    public UserResponse getByUsername(@RequestParam String username) {
+        return userService.findByUsername(username);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UserResponse createUser(@Valid @RequestBody CreateUserRequest request) {
