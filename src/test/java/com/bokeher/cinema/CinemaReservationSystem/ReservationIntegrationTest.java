@@ -57,22 +57,9 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createReservation_shouldCreateReservation() {
-        User user = userWithoutId()
-                .password(passwordEncoder.encode(PASSWORD))
-                .build();
-        userRepository.save(user);
+        User user = createAndSaveUser(USERNAME);
 
-        Movie movie = movieWithoutId().build();
-        movieRepository.save(movie);
-
-        Room room = roomWithoutId().build();
-        roomRepository.save(room);
-
-        Screening screening = screeningWithoutId()
-                .movie(movie)
-                .room(room)
-                .build();
-        screeningRepository.save(screening);
+        Screening screening = createAndSaveScreening();
 
         Seat seat = screening.getRoom().getSeats().get(0);
 
@@ -114,28 +101,11 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createReservation_shouldThrowError_whenSeatAlreadyTaken() {
-        User user = userWithoutId()
-                .password(passwordEncoder.encode(PASSWORD))
-                .build();
-        userRepository.save(user);
+        createAndSaveUser(USERNAME);
 
-        User otherUser = userWithoutId()
-                .username("OtherUser")
-                .email("other@example.com")
-                .build();
-        userRepository.save(otherUser);
+        User otherUser = createAndSaveUser("OtherUser");
 
-        Movie movie = movieWithoutId().build();
-        movieRepository.save(movie);
-
-        Room room = roomWithoutId().build();
-        roomRepository.save(room);
-
-        Screening screening = screeningWithoutId()
-                .movie(movie)
-                .room(room)
-                .build();
-        screeningRepository.save(screening);
+        Screening screening = createAndSaveScreening();
 
         Seat seat = screening.getRoom().getSeats().get(0);
 
@@ -178,27 +148,14 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createReservation_shouldThrowError_whenSeatDoesNotBelongToScreeningRoom() {
-        User user = userWithoutId()
-                .password(passwordEncoder.encode(PASSWORD))
-                .build();
-        userRepository.save(user);
+        createAndSaveUser(USERNAME);
 
-        Movie movie = movieWithoutId().build();
-        movieRepository.save(movie);
+        Screening screening = createAndSaveScreening();
 
-        Room room1 = roomWithoutId().build();
-        roomRepository.save(room1);
+        Room otherRoom = roomWithoutId().build();
+        roomRepository.save(otherRoom);
 
-        Room room2 = roomWithoutId().build();
-        roomRepository.save(room2);
-
-        Screening screening = screeningWithoutId()
-                .movie(movie)
-                .room(room1)
-                .build();
-        screeningRepository.save(screening);
-
-        Seat wrongSeat = room2.getSeats().get(0);
+        Seat wrongSeat = otherRoom.getSeats().get(0);
 
         String token = loginAndGetToken(USERNAME, PASSWORD);
 
@@ -225,32 +182,10 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
     @Test
     void createReservation_shouldHandleRaceCondition() throws Exception {
-        User user1 = userWithoutId()
-                .username("user1")
-                .email("user1@example.com")
-                .password(passwordEncoder.encode(PASSWORD))
-                .build();
+        createAndSaveUser("user1");
+        createAndSaveUser("user2");
 
-        User user2 = userWithoutId()
-                .username("user2")
-                .email("user2@example.com")
-                .password(passwordEncoder.encode(PASSWORD))
-                .build();
-
-        userRepository.save(user1);
-        userRepository.save(user2);
-
-        Movie movie = movieWithoutId().build();
-        movieRepository.save(movie);
-
-        Room room = roomWithoutId().build();
-        roomRepository.save(room);
-
-        Screening screening = screeningWithoutId()
-                .movie(movie)
-                .room(room)
-                .build();
-        screeningRepository.save(screening);
+        Screening screening = createAndSaveScreening();
 
         Seat seat = screening.getRoom().getSeats().get(0);
 
@@ -337,6 +272,28 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
         assertThat(body.getToken()).isNotBlank();
 
         return body.getToken();
+    }
+
+    private User createAndSaveUser(String username) {
+        User user = userWithoutId()
+                .username(username)
+                .email(username + "@example.com")
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private Screening createAndSaveScreening() {
+        Movie movie = movieRepository.save(movieWithoutId().build());
+        Room room = roomRepository.save(roomWithoutId().build());
+
+        return screeningRepository.save(
+                screeningWithoutId()
+                        .movie(movie)
+                        .room(room)
+                        .build()
+        );
     }
 
 }
