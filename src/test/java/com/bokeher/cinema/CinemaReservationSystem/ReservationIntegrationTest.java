@@ -100,7 +100,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
-    void createReservation_shouldThrowError_whenSeatAlreadyTaken() {
+    void createReservation_shouldThrowError_whenSeatAlreadyTakenAndStatusPending() {
         createAndSaveUser(USERNAME);
 
         User otherUser = createAndSaveUser("OtherUser");
@@ -114,6 +114,53 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
                 .user(otherUser)
                 .screening(screening)
                 .status(ReservationStatus.PENDING)
+                .active(true)
+                .build();
+
+        reservationRepository.save(reservation);
+
+        String token = loginAndGetToken(USERNAME, PASSWORD);
+
+        CreateReservationRequest request = CreateReservationRequest.builder()
+                .seatId(seat.getId())
+                .screeningId(screening.getId())
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<CreateReservationRequest> entity =
+                new HttpEntity<>(request, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/reservations",
+                entity,
+                String.class
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(response.getBody()).isNotNull();
+
+        assertThat(reservationRepository.count())
+                .isEqualTo(1);
+    }
+
+    @Test
+    void createReservation_shouldThrowError_whenSeatAlreadyTakenAndStatusConfirmed() {
+        createAndSaveUser(USERNAME);
+
+        User otherUser = createAndSaveUser("OtherUser");
+
+        Screening screening = createAndSaveScreening();
+
+        Seat seat = screening.getRoom().getSeats().get(0);
+
+        Reservation reservation = reservationWithoutId()
+                .seat(seat)
+                .user(otherUser)
+                .screening(screening)
+                .status(ReservationStatus.CONFIRMED)
                 .active(true)
                 .build();
 
