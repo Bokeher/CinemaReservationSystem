@@ -172,6 +172,54 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
                 .isEqualTo(1);
     }
 
+    @Test
+    void createReservation_shouldThrowError_whenSeatDoesNotBelongToScreeningRoom() {
+        User user = userWithoutId()
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+        userRepository.save(user);
+
+        Movie movie = movieWithoutId().build();
+        movieRepository.save(movie);
+
+        Room room1 = roomWithoutId().build();
+        roomRepository.save(room1);
+
+        Room room2 = roomWithoutId().build();
+        roomRepository.save(room2);
+
+        Screening screening = screeningWithoutId()
+                .movie(movie)
+                .room(room1)
+                .build();
+        screeningRepository.save(screening);
+
+        Seat wrongSeat = room2.getSeats().get(0);
+
+        String token = loginAndGetToken(USERNAME, PASSWORD);
+
+        CreateReservationRequest request = CreateReservationRequest.builder()
+                .seatId(wrongSeat.getId())
+                .screeningId(screening.getId())
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<CreateReservationRequest> entity =
+                new HttpEntity<>(request, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/reservations",
+                entity,
+                String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        assertThat(reservationRepository.count()).isEqualTo(0);
+    }
+
+
     private String loginAndGetToken(String username, String password) {
         LoginUserRequest request = LoginUserRequest.builder()
                 .username(username)
