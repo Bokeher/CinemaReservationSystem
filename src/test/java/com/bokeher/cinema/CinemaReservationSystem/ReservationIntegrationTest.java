@@ -4,6 +4,7 @@ import com.bokeher.cinema.CinemaReservationSystem.auth.dto.AuthResponse;
 import com.bokeher.cinema.CinemaReservationSystem.auth.dto.LoginUserRequest;
 import com.bokeher.cinema.CinemaReservationSystem.movie.Movie;
 import com.bokeher.cinema.CinemaReservationSystem.movie.MovieRepository;
+import com.bokeher.cinema.CinemaReservationSystem.reservation.Reservation;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationRepository;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationStatus;
 import com.bokeher.cinema.CinemaReservationSystem.reservation.dto.CreateReservationRequest;
@@ -24,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static com.bokeher.cinema.CinemaReservationSystem.movie.MovieFixtures.movieWithoutId;
+import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationFixtures.reservationWithoutId;
 import static com.bokeher.cinema.CinemaReservationSystem.room.RoomFixtures.roomWithoutId;
 import static com.bokeher.cinema.CinemaReservationSystem.screening.ScreeningFixtures.screeningWithoutId;
 import static com.bokeher.cinema.CinemaReservationSystem.user.UserFixtures.*;
@@ -121,5 +123,86 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         assertThat(reservationRepository.findById(reservationResponse.getId()))
                 .isPresent();
+    }
+
+    @Test
+    void createReservation_shouldThrowError_whenSeatAlreadyTaken() {
+        User user = userWithoutId()
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+        userRepository.save(user);
+
+        User otherUser = userWithoutId()
+                .username("OtherUser")
+                .email("other@example.com")
+                .build();
+        userRepository.save(otherUser);
+
+        Movie movie = movieWithoutId().build();
+        movieRepository.save(movie);
+
+        Room room = roomWithoutId().build();
+        roomRepository.save(room);
+
+        Screening screening = screeningWithoutId()
+                .movie(movie)
+                .room(room)
+                .build();
+        screeningRepository.save(screening);
+
+        Seat seat = screening.getRoom().getSeats().get(0);
+
+        Reservation reservation = reservationWithoutId()
+                .seat(seat)
+                .user(otherUser)
+                .screening(screening)
+                .status(ReservationStatus.PENDING)
+                .active(true)
+                .build();
+
+        reservationRepository.save(reservation);
+
+        LoginUserRequest loginUserRequest = LoginUserRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+
+        ResponseEntity<AuthResponse> loginResponse = testRestTemplate.postForEntity(
+                "/auth/login",
+                loginUserRequest,
+                AuthResponse.class
+        );
+
+        AuthResponse authResponse = loginResponse.getBody();
+
+        assertThat(authResponse).isNotNull();
+
+        String token = authResponse.getToken();
+
+        assertThat(token).isNotBlank();
+
+        CreateReservationRequest request = CreateReservationRequest.builder()
+                .seatId(seat.getId())
+                .screeningId(screening.getId())
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<CreateReservationRequest> entity =
+                new HttpEntity<>(request, headers);
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/reservations",
+                entity,
+                String.class
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+        assertThat(response.getBody()).isNotNull();
+
+        assertThat(reservationRepository.count())
+                .isEqualTo(1);
     }
 }
