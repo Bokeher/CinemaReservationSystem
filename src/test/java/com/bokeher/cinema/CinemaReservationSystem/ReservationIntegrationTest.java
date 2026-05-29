@@ -24,6 +24,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Stream;
+
 import static com.bokeher.cinema.CinemaReservationSystem.movie.MovieFixtures.movieWithoutId;
 import static com.bokeher.cinema.CinemaReservationSystem.reservation.ReservationFixtures.reservationWithoutId;
 import static com.bokeher.cinema.CinemaReservationSystem.room.RoomFixtures.roomWithoutId;
@@ -219,6 +223,101 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
         assertThat(reservationRepository.count()).isEqualTo(0);
     }
 
+    @Test
+    void createReservation_shouldHandleRaceCondition() throws Exception {
+        User user1 = userWithoutId()
+                .username("user1")
+                .email("user1@example.com")
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+
+        User user2 = userWithoutId()
+                .username("user2")
+                .email("user2@example.com")
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+
+        userRepository.save(user1);
+        userRepository.save(user2);
+
+        Movie movie = movieWithoutId().build();
+        movieRepository.save(movie);
+
+        Room room = roomWithoutId().build();
+        roomRepository.save(room);
+
+        Screening screening = screeningWithoutId()
+                .movie(movie)
+                .room(room)
+                .build();
+        screeningRepository.save(screening);
+
+        Seat seat = screening.getRoom().getSeats().get(0);
+
+        String token1 = loginAndGetToken("user1", PASSWORD);
+        String token2 = loginAndGetToken("user2", PASSWORD);
+
+        CreateReservationRequest request = CreateReservationRequest.builder()
+                .seatId(seat.getId())
+                .screeningId(screening.getId())
+                .build();
+
+        HttpHeaders headers1 = new HttpHeaders();
+        headers1.setBearerAuth(token1);
+
+        HttpHeaders headers2 = new HttpHeaders();
+        headers2.setBearerAuth(token2);
+
+        HttpEntity<CreateReservationRequest> entity1 = new HttpEntity<>(request, headers1);
+        HttpEntity<CreateReservationRequest> entity2 = new HttpEntity<>(request, headers2);
+
+        CountDownLatch start = new CountDownLatch(1);
+        CountDownLatch done = new CountDownLatch(2);
+
+        AtomicReference<ResponseEntity<String>> r1 = new AtomicReference<>();
+        AtomicReference<ResponseEntity<String>> r2 = new AtomicReference<>();
+
+        Runnable task1 = () -> {
+            try {
+                start.await();
+                r1.set(testRestTemplate.postForEntity(
+                        "/reservations",
+                        entity1,
+                        String.class
+                ));
+            } catch (Exception ignored) {
+            } finally {
+                done.countDown();
+            }
+        };
+
+        Runnable task2 = () -> {
+            try {
+                start.await();
+                r2.set(testRestTemplate.postForEntity(
+                        "/reservations",
+                        entity2,
+                        String.class
+                ));
+            } catch (Exception ignored) {
+            } finally {
+                done.countDown();
+            }
+        };
+
+        new Thread(task1).start();
+        new Thread(task2).start();
+
+        start.countDown();
+        done.await();
+
+        long success = Stream.of(r1.get(), r2.get())
+                .filter(res -> res.getStatusCode().is2xxSuccessful())
+                .count();
+
+        assertThat(success).isEqualTo(1);
+        assertThat(reservationRepository.count()).isEqualTo(1);
+    }
 
     private String loginAndGetToken(String username, String password) {
         LoginUserRequest request = LoginUserRequest.builder()
