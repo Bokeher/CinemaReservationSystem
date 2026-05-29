@@ -72,24 +72,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         Seat seat = screening.getRoom().getSeats().get(0);
 
-        LoginUserRequest loginUserRequest = LoginUserRequest.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .build();
-
-        ResponseEntity<AuthResponse> loginResponse = testRestTemplate.postForEntity(
-                "/auth/login",
-                loginUserRequest,
-                AuthResponse.class
-        );
-
-        AuthResponse authResponse = loginResponse.getBody();
-
-        assertThat(authResponse).isNotNull();
-
-        String token = authResponse.getToken();
-
-        assertThat(token).isNotBlank();
+        String token = loginAndGetToken(USERNAME, PASSWORD);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -162,24 +145,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         reservationRepository.save(reservation);
 
-        LoginUserRequest loginUserRequest = LoginUserRequest.builder()
-                .username(USERNAME)
-                .password(PASSWORD)
-                .build();
-
-        ResponseEntity<AuthResponse> loginResponse = testRestTemplate.postForEntity(
-                "/auth/login",
-                loginUserRequest,
-                AuthResponse.class
-        );
-
-        AuthResponse authResponse = loginResponse.getBody();
-
-        assertThat(authResponse).isNotNull();
-
-        String token = authResponse.getToken();
-
-        assertThat(token).isNotBlank();
+        String token = loginAndGetToken(USERNAME, PASSWORD);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -205,4 +171,25 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
         assertThat(reservationRepository.count())
                 .isEqualTo(1);
     }
+
+    private String loginAndGetToken(String username, String password) {
+        LoginUserRequest request = LoginUserRequest.builder()
+                .username(username)
+                .password(password)
+                .build();
+
+        ResponseEntity<AuthResponse> response = testRestTemplate.postForEntity(
+                "/auth/login",
+                request,
+                AuthResponse.class
+        );
+
+        AuthResponse body = response.getBody();
+
+        assertThat(body).isNotNull();
+        assertThat(body.getToken()).isNotBlank();
+
+        return body.getToken();
+    }
+
 }
