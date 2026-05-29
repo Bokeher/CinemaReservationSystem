@@ -194,6 +194,59 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
     }
 
     @Test
+    void createReservation_shouldCreateReservation_whenSeatAlreadyTakenAndStatusCancelled() {
+        createAndSaveUser(USERNAME);
+
+        User otherUser = createAndSaveUser("OtherUser");
+
+        Screening screening = createAndSaveScreening();
+
+        Seat seat = screening.getRoom().getSeats().get(0);
+
+        Reservation reservation = reservationWithoutId()
+                .seat(seat)
+                .user(otherUser)
+                .screening(screening)
+                .status(ReservationStatus.CANCELLED)
+                .active(false)
+                .build();
+
+        reservationRepository.save(reservation);
+
+        String token = loginAndGetToken(USERNAME, PASSWORD);
+
+        CreateReservationRequest request = CreateReservationRequest.builder()
+                .seatId(seat.getId())
+                .screeningId(screening.getId())
+                .build();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<CreateReservationRequest> entity =
+                new HttpEntity<>(request, headers);
+
+        ResponseEntity<ReservationResponse> response = testRestTemplate.postForEntity(
+                "/reservations",
+                entity,
+                ReservationResponse.class
+        );
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(response.getBody()).isNotNull();
+
+        ReservationResponse body = response.getBody();
+
+        assertThat(body.getId()).isNotNull();
+        assertThat(body.getStatus()).isEqualTo(ReservationStatus.PENDING);
+        assertThat(body.getSeat().getId()).isEqualTo(seat.getId());
+        assertThat(body.getScreening().getId()).isEqualTo(screening.getId());
+
+        assertThat(reservationRepository.count()).isEqualTo(2);
+    }
+
+    @Test
     void createReservation_shouldThrowError_whenSeatDoesNotBelongToScreeningRoom() {
         createAndSaveUser(USERNAME);
 
