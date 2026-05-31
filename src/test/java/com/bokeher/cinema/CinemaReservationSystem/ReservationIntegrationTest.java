@@ -354,6 +354,26 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
         assertThat(reservationRepository.count()).isEqualTo(1);
     }
 
+    @Test
+    void createReservation_shouldReturnForbidden_whenNoTokenProvided() {
+        Screening screening = createAndSaveScreening();
+
+        Seat seat = screening.getRoom().getSeats().get(0);
+
+        CreateReservationRequest request = CreateReservationRequest.builder()
+                .seatId(seat.getId())
+                .screeningId(screening.getId())
+                .build();
+
+        ResponseEntity<String> response = testRestTemplate.postForEntity(
+                "/reservations",
+                request,
+                String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
     private String loginAndGetToken(String username, String password) {
         LoginUserRequest request = LoginUserRequest.builder()
                 .username(username)
