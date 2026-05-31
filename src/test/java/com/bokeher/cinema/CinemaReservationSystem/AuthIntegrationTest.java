@@ -8,7 +8,9 @@ import com.bokeher.cinema.CinemaReservationSystem.user.UserRepository;
 import com.bokeher.cinema.CinemaReservationSystem.user.UserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -115,4 +117,44 @@ class AuthIntegrationTest extends BaseIntegrationTest {
         assertThat(response.getBody())
                 .isEqualTo("Invalid username or password");
     }
+
+    @Test
+    void adminEndpoint_shouldReturnForbidden_whenUserIsAuthenticatedButNotAdmin() {
+        User user = userWithoutId()
+                .password(passwordEncoder.encode(PASSWORD))
+                .build();
+
+        userRepository.save(user);
+
+        LoginUserRequest loginRequest = LoginUserRequest.builder()
+                .username(USERNAME)
+                .password(PASSWORD)
+                .build();
+
+        ResponseEntity<AuthResponse> loginResponse = testRestTemplate.postForEntity(
+                "/auth/login",
+                loginRequest,
+                AuthResponse.class
+        );
+
+        AuthResponse body = loginResponse.getBody();
+
+        assertThat(body).isNotNull();
+        assertThat(body.getToken()).isNotBlank();
+
+        String token = body.getToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        ResponseEntity<String> response = testRestTemplate.exchange(
+                "/admin/rooms",
+                org.springframework.http.HttpMethod.GET,
+                new HttpEntity<>(null, headers),
+                String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
 }
