@@ -157,6 +157,12 @@ The database schema describes the core domain model of the application, includin
 - [Interactive Diagram](https://dbdocs.io/rychter47/CinemaReservationSystem?view=relationships)
 - [DBML schema](docs/schema.dbml)
 
+> **Why are both `active` and `ReservationStatus` used in the Reservation table?**
+>
+> MySQL does not support partial unique constraints, which makes it difficult to enforce uniqueness only for active reservations while still keeping historical (cancelled) records.
+>
+> To solve this, the system uses a combination of `ReservationStatus` and an `active` flag. Only active reservations are considered when enforcing uniqueness constraints for seat reservations, while cancelled reservations remain stored in the database and do not block rebooking of the same seat.
+
 ## Planned functional requirements
 - List available movies and screenings
 - Display cinema hall layout with available and reserved seats
