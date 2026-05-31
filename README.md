@@ -163,14 +163,26 @@ The database schema describes the core domain model of the application, includin
 >
 > To solve this, the system uses a combination of `ReservationStatus` and an `active` flag. Only active reservations are considered when enforcing uniqueness constraints for seat reservations, while cancelled reservations remain stored in the database and do not block rebooking of the same seat.
 
-## Planned functional requirements
-- List available movies and screenings
-- Display cinema hall layout with available and reserved seats
-- Seat reservation for selected screenings
-- Reservation management (confirm / cancel)
+## Main Features
+- User registration
+- Login
+- Seat reservation
+- Browsing movies
+- Browsing screenings
+- Viewing seats for a given screening
+- Confirm or cancel reservation
 
-## Planned security features
+## Security Features
 - JWT authentication
-- Password hashing 
-- Protection against SQL Injection
-- Protection against Cross-Site Scripting (XSS)
+- Password hashing (bcrypt)
+- Role-based access control (USER / ADMIN)
+- Protection against SQL Injection via Hibernate
+- Protection against XSS using Content Security Policy (cannot be fully solved on backend side, frontend is also required)
+
+## Business logic
+- Preventing race conditions during seat reservation
+- Preventing reservation of seats that do not belong to a screening
+- Preventing reservation of already occupied seats
+- Allowing cancelled reservations to remain in database and be rebookable
+- Preventing confirmation of cancelled reservations
+
