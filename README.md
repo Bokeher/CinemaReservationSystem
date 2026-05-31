@@ -16,6 +16,71 @@ The application allows users to browse movies, view screenings, and reserve seat
 - JUnit / Spring Boot Test
 - Testcontainers (integration testing)
 - Lombok
+- Docker
+
+## How to run
+
+### Docker (recommended)
+
+#### Requirements
+
+- Docker
+- Docker Compose
+
+#### Steps
+
+1. Create Docker configuration file:
+
+Windows (cmd)
+```cmd
+copy src\main\resources\application-docker.properties.example src\main\resources\application-docker.properties
+```
+
+Linux / macOS / Git Bash / WSL
+```bash
+cp src/main/resources/application-docker.properties.example src/main/resources/application-docker.properties
+```
+
+2. Run application:
+
+```bash
+docker compose up --build
+```
+
+3. API is available at: http://localhost:8080
+
+### Locally
+
+#### Requirements
+
+- Java 17
+- Maven (or Maven Wrapper included)
+- MySQL 8+
+
+#### Steps
+
+1. Start MySQL server
+
+2. Create database with name 'cinema'
+
+3. Create configuration file based on ``.example``:
+
+Windows (cmd)
+```cmd
+copy src\main\resources\application-local.properties.example src\main\resources\application-local.properties
+```
+
+Linux / macOS / Git Bash / WSL
+```bash
+cp src/main/resources/application-local.properties.example src/main/resources/application-local.properties
+```
+
+4. Run application
+```bash
+./mvnw spring-boot:run
+```
+
+5. API is available at: http://localhost:8080
 
 ## API Endpoints
 
