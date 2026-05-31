@@ -8,11 +8,15 @@ The project is currently in active development.
 
 ## Tech stack
 - Java 17
-- Spring Boot
+- Spring Boot 3.5.14
+- Spring Web (REST API)
 - Spring Data JPA (Hibernate)
+- Spring Security (JWT)
 - MySQL
-- JUnit
 - Maven
+- JUnit / Spring Boot Test
+- Testcontainers (integration testing)
+- Lombok
 
 ## Planned functional requirements
 - List available movies and screenings
