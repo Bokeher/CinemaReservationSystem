@@ -58,24 +58,24 @@ The application allows users to browse movies, view screenings, and reserve seat
 
 ### Reservations
 
-| Method | Endpoint | Access | Success | Description |
-|--------|----------|--------|---------|-------------|
-| GET | /reservations | Authenticated | 200 | Get current user's reservations |
-| GET | /reservations/{id} | Authenticated | 200 | Get reservation details |
-| POST | /reservations | Authenticated | 201 | Create a reservation |
-| DELETE | /reservations/{id} | Authenticated | 204 | Cancel reservation |
-| PATCH | /reservations/{id}/confirm | Authenticated | 204 | Confirm reservation |
+| Method | Endpoint                   | Access        | Success | Description                     |
+|--------|----------------------------|---------------|---------|---------------------------------|
+| GET    | /reservations              | Authenticated | 200     | Get current user's reservations |
+| GET    | /reservations/{id}         | Authenticated | 200     | Get reservation details         |
+| POST   | /reservations              | Authenticated | 201     | Create a reservation            |
+| DELETE | /reservations/{id}         | Authenticated | 204     | Cancel reservation              |
+| PATCH  | /reservations/{id}/confirm | Authenticated | 204     | Confirm reservation             |
 
 ### User
 
-| Method | Endpoint | Access | Success | Description |
-|--------|----------|--------|---------|-------------|
-| GET | /me | Authenticated | 200 | Get current user profile |
-| GET | /admin/users | ADMIN | 200 | Get users (optional query: `?username=`) |
-| GET | /admin/users/{id} | ADMIN | 200 | Get user by ID |
-| POST | /admin/users | ADMIN | 201 | Create user |
-| PATCH | /admin/users/{id} | ADMIN | 200 | Update user |
-| DELETE | /admin/users/{id} | ADMIN | 204 | Delete user |
+| Method | Endpoint          | Access        | Success | Description                              |
+|--------|-------------------|---------------|---------|------------------------------------------|
+| GET    | /me               | Authenticated | 200     | Get current user profile                 |
+| GET    | /admin/users      | ADMIN         | 200     | Get users (optional query: `?username=`) |
+| GET    | /admin/users/{id} | ADMIN         | 200     | Get user by ID                           |
+| POST   | /admin/users      | ADMIN         | 201     | Create user                              |
+| PATCH  | /admin/users/{id} | ADMIN         | 200     | Update user                              |
+| DELETE | /admin/users/{id} | ADMIN         | 204     | Delete user                              |
 
 ## Planned functional requirements
 - List available movies and screenings
