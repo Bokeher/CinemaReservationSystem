@@ -84,6 +84,20 @@ cp src/main/resources/application-local.properties.example src/main/resources/ap
 
 5. API is available at: http://localhost:8080
 
+### API testing (Bruno)
+
+The project includes a Bruno collection for testing the REST API.
+
+#### Requirements
+- Bruno API client
+
+#### Steps
+1. Open Bruno
+2. Create workspace
+3. Create env with 'baseUrl' (default url is 'http://localhost:8080')
+4. Import the collection from `/bruno` directory
+5. Run tests
+
 ## API Endpoints
 
 ### Authentication
