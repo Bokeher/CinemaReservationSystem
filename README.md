@@ -77,6 +77,19 @@ The application allows users to browse movies, view screenings, and reserve seat
 | PATCH  | /admin/users/{id} | ADMIN         | 200     | Update user                              |
 | DELETE | /admin/users/{id} | ADMIN         | 204     | Delete user                              |
 
+## Database schema
+
+The database schema describes the core domain model of the application, including users, movies, screenings, rooms, seats, and reservations, along with their relationships and constraints.
+
+### Entity-Relationship diagram
+
+<img width="900" alt="image" src="https://github.com/user-attachments/assets/5352f4c6-faff-44ce-821d-27a0a5b71b3a" />
+
+### Additional Resources
+
+- [Interactive Diagram](https://dbdocs.io/rychter47/CinemaReservationSystem?view=relationships)
+- [DBML schema](docs/schema.dbml)
+
 ## Planned functional requirements
 - List available movies and screenings
 - Display cinema hall layout with available and reserved seats
