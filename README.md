@@ -1,9 +1,11 @@
 # Cinema Reservation System
 
-## Project description
-This project is a recruitment task. The goal is to implement a simple cinema reservation system as a REST API using Spring Boot.
+A REST API for a cinema reservation system built with Spring Boot. The application provides functionality for 
+browsing movies, managing screenings, and reserving seats in cinema rooms.
 
-The application allows users to browse movies, view screenings, and reserve seats.  
+The system is built using a layered architecture (Controller / Service / Repository) with JWT-based authentication 
+and role-based access control (USER / ADMIN). It uses a relational MySQL database to model movies, screenings, 
+rooms, seats, and reservations, ensuring consistency of seat availability across concurrent requests.
 
 ## Tech stack
 - Java 17
