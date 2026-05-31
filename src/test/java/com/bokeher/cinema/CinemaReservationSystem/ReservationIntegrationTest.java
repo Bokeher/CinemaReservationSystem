@@ -63,7 +63,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         Seat seat = screening.getRoom().getSeats().get(0);
 
-        String token = loginAndGetToken(USERNAME, PASSWORD);
+        String token = loginAndGetToken(USERNAME);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -119,7 +119,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         reservationRepository.save(reservation);
 
-        String token = loginAndGetToken(USERNAME, PASSWORD);
+        String token = loginAndGetToken(USERNAME);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -166,7 +166,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         reservationRepository.save(reservation);
 
-        String token = loginAndGetToken(USERNAME, PASSWORD);
+        String token = loginAndGetToken(USERNAME);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -213,7 +213,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         reservationRepository.save(reservation);
 
-        String token = loginAndGetToken(USERNAME, PASSWORD);
+        String token = loginAndGetToken(USERNAME);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -257,7 +257,7 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         Seat wrongSeat = otherRoom.getSeats().get(0);
 
-        String token = loginAndGetToken(USERNAME, PASSWORD);
+        String token = loginAndGetToken(USERNAME);
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(wrongSeat.getId())
@@ -289,8 +289,8 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
 
         Seat seat = screening.getRoom().getSeats().get(0);
 
-        String token1 = loginAndGetToken("user1", PASSWORD);
-        String token2 = loginAndGetToken("user2", PASSWORD);
+        String token1 = loginAndGetToken("user1");
+        String token2 = loginAndGetToken("user2");
 
         CreateReservationRequest request = CreateReservationRequest.builder()
                 .seatId(seat.getId())
@@ -374,10 +374,10 @@ class ReservationIntegrationTest extends BaseIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
-    private String loginAndGetToken(String username, String password) {
+    private String loginAndGetToken(String username) {
         LoginUserRequest request = LoginUserRequest.builder()
                 .username(username)
-                .password(password)
+                .password(PASSWORD)
                 .build();
 
         ResponseEntity<AuthResponse> response = testRestTemplate.postForEntity(
