@@ -4,7 +4,6 @@
 This project is a recruitment task. The goal is to implement a simple cinema reservation system as a REST API using Spring Boot.
 
 The application allows users to browse movies, view screenings, and reserve seats.  
-The project is currently in active development.
 
 ## Tech stack
 - Java 17
@@ -89,9 +88,3 @@ The project is currently in active development.
 - Password hashing 
 - Protection against SQL Injection
 - Protection against Cross-Site Scripting (XSS)
-
-## Project status
-The project is in its initial development stage. Core backend structure is being set up.
-
-## Notes
-This repository contains a recruitment task implementation.
