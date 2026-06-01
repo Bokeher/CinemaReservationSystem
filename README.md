@@ -18,6 +18,7 @@ rooms, seats, and reservations, ensuring consistency of seat availability across
 - JUnit / Spring Boot Test
 - Testcontainers (integration testing)
 - Lombok
+- Swagger UI / OpenAPI
 - Docker
 
 ## How to run
@@ -83,6 +84,12 @@ cp src/main/resources/application-local.properties.example src/main/resources/ap
 ```
 
 5. API is available at: http://localhost:8080
+
+## API testing (Swagger)
+
+#### Swagger UI is available at: http://localhost:8080/swagger-ui.html
+
+#### OpenAPI JSON is available at: http://localhost:8080/v3/api-docs
 
 ### API testing (Bruno)
 
