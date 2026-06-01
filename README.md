@@ -21,6 +21,29 @@ rooms, seats, and reservations, ensuring consistency of seat availability across
 - Swagger UI / OpenAPI
 - Docker
 
+## Main Features
+- User registration
+- Login
+- Seat reservation
+- Browsing movies
+- Browsing screenings
+- Viewing seats for a given screening
+- Confirm or cancel reservation
+
+## Security Features
+- JWT authentication
+- Password hashing (bcrypt)
+- Role-based access control (USER / ADMIN)
+- Protection against SQL Injection via Hibernate
+- Protection against XSS using Content Security Policy (cannot be fully solved on backend side, frontend is also required)
+
+## Business logic
+- Preventing race conditions during seat reservation
+- Preventing reservation of seats that do not belong to a screening
+- Preventing reservation of already occupied seats
+- Allowing cancelled reservations to remain in database and be rebookable
+- Preventing confirmation of cancelled reservations
+
 ## How to run
 
 ### Docker (recommended)
@@ -205,27 +228,3 @@ The database schema describes the core domain model of the application, includin
 > MySQL does not support partial unique constraints, which makes it difficult to enforce uniqueness only for active reservations while still keeping historical (cancelled) records.
 >
 > To solve this, the system uses a combination of `ReservationStatus` and an `active` flag. Only active reservations are considered when enforcing uniqueness constraints for seat reservations, while cancelled reservations remain stored in the database and do not block rebooking of the same seat.
-
-## Main Features
-- User registration
-- Login
-- Seat reservation
-- Browsing movies
-- Browsing screenings
-- Viewing seats for a given screening
-- Confirm or cancel reservation
-
-## Security Features
-- JWT authentication
-- Password hashing (bcrypt)
-- Role-based access control (USER / ADMIN)
-- Protection against SQL Injection via Hibernate
-- Protection against XSS using Content Security Policy (cannot be fully solved on backend side, frontend is also required)
-
-## Business logic
-- Preventing race conditions during seat reservation
-- Preventing reservation of seats that do not belong to a screening
-- Preventing reservation of already occupied seats
-- Allowing cancelled reservations to remain in database and be rebookable
-- Preventing confirmation of cancelled reservations
-
