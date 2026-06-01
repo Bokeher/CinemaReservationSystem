@@ -5,7 +5,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: cinema
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: ["CMD-SHELL", "mysql -uroot -proot cinema -e 'SELECT 1'"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -15,6 +15,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: on-failure
     environment:
       SPRING_PROFILES_ACTIVE: docker
