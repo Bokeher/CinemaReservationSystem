@@ -91,14 +91,14 @@ cp src/main/resources/application-local.properties.example src/main/resources/ap
 
 #### OpenAPI JSON is available at: http://localhost:8080/v3/api-docs
 
-### API testing (Bruno)
+## API testing (Bruno)
 
 The project includes a Bruno collection for testing the REST API.
 
-#### Requirements
+### Requirements
 - Bruno API client
 
-#### Steps
+### Steps
 1. Open Bruno
 2. Create workspace
 3. Create env with 'baseUrl' (default url is 'http://localhost:8080')
