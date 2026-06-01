@@ -105,6 +105,28 @@ The project includes a Bruno collection for testing the REST API.
 4. Import the collection from `/bruno` directory
 5. Run tests
 
+## Authentication & Authorization
+
+The API uses JWT (JSON Web Token) based authentication.
+
+### Authentication flow
+1. User registers via `/auth/register` — returns a JWT token
+2. User logs in via `/auth/login` — returns a JWT token
+3. The token must be included in all protected requests as an HTTP header:
+
+```
+Authorization: Bearer <token>
+```
+
+### Access levels
+- **Public** → no authentication required
+- **Authenticated** → valid JWT required
+- **ADMIN** → elevated privileges for management endpoints
+
+### Role-based access
+- **USER**: can browse data and manage their own reservations
+- **ADMIN**: has full access to manage movies, screenings, rooms, and users
+
 ## API Endpoints
 
 ### Authentication
