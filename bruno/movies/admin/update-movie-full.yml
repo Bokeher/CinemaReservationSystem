@@ -5,13 +5,13 @@ info:
 
 http:
   method: PATCH
-  url: "{{baseUrl}}/admin/movies/2"
+  url: "{{baseUrl}}/admin/movies/3"
   body:
     type: json
     data: |-
       {
         "title": "Shrek 2",
-        "description": "An ogre named Shrek embarks on a journey to rescue Princess Fiona and reclaim his swamp.",
+        "description": "Shrek again.",
         "requiredAge": 7,
         "durationMinutes": 90
       }

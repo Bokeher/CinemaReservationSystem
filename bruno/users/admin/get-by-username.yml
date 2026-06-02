@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/admin/users?username=test"
+  url: "{{baseUrl}}/admin/users?username=user"
   params:
     - name: username
-      value: test
+      value: user
       type: query
   auth: inherit
 

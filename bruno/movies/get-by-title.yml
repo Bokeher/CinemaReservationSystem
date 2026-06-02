@@ -5,10 +5,10 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/movies?title=shrek"
+  url: "{{baseUrl}}/movies?title=interstellar"
   params:
     - name: title
-      value: shrek
+      value: interstellar
       type: query
   auth: inherit
 

@@ -5,14 +5,14 @@ info:
 
 http:
   method: PATCH
-  url: "{{baseUrl}}/admin/users/5"
+  url: "{{baseUrl}}/admin/users/2"
   body:
     type: json
     data: |-
       {
         "username": "user",
         "email": "user@b.com",
-        "password": "user",
+        "password": "user1234",
         "role": "USER"
       }
   auth: inherit

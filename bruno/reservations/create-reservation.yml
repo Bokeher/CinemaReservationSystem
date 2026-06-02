@@ -10,8 +10,8 @@ http:
     type: json
     data: |-
       {
-        "screeningId": 4,
-        "seatId": 38
+        "screeningId": 1,
+        "seatId": 2
       }
   auth: inherit
 
