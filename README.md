@@ -97,6 +97,36 @@ cp src/main/resources/application-local.properties.example src/main/resources/ap
 
 5. API is available at: http://localhost:8080
 
+## Demo mode 
+
+The application can automatically seed initial data on startup. This is controlled by the following properties:
+
+```properties
+app.seed.add-admin=true
+app.seed.demo-mode=true
+```
+
+When `app.seed.add-admin=true`, the application creates a default admin account if no admin user exists yet:
+
+| Role  | Username | Password |
+|-------|----------|----------|
+| ADMIN | admin    | admin123 |
+
+When `app.seed.demo-mode=true`, the application creates demo data if the movie table is empty:
+
+- Demo user: `user` / `password`
+- Movies: `Inception`, `Interstellar`
+- Room: `Room 1` with generated seats
+- Screenings: two sample screenings scheduled about 7 days after application startup
+- Reservation: one pending reservation for the demo user
+
+Demo mode is intended for local development, presentation, and API testing. For production-like usage, disable it:
+
+```properties
+app.seed.add-admin=false
+app.seed.demo-mode=false
+```
+
 ## API testing (Swagger)
 
 #### Swagger UI is available at: http://localhost:8080/swagger-ui.html
