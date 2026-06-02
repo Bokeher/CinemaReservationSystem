@@ -133,9 +133,14 @@ app.seed.demo-mode=false
 
 #### OpenAPI JSON is available at: http://localhost:8080/v3/api-docs
 
+> Remember to set the authorization header by clicking 'Authorize' button 
+> and paste there token received from login / register endpoints
+
 ## API testing (Bruno)
 
 The project includes a Bruno collection for testing the REST API.
+
+The Authorization header is configured automatically after using the login or register request.
 
 ### Requirements
 - Bruno API client
