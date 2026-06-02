@@ -55,25 +55,14 @@ rooms, seats, and reservations, ensuring consistency of seat availability across
 
 #### Steps
 
-1. Create Docker configuration file:
 
-Windows (cmd)
-```cmd
-copy src\main\resources\application-docker.properties.example src\main\resources\application-docker.properties
-```
-
-Linux / macOS / Git Bash / WSL
-```bash
-cp src/main/resources/application-docker.properties.example src/main/resources/application-docker.properties
-```
-
-2. Run application:
+1. Run application:
 
 ```bash
 docker compose up --build
 ```
 
-3. API is available at: http://localhost:8080
+2. API is available at: http://localhost:8080
 
 ### Locally
 

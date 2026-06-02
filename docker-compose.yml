@@ -19,4 +19,9 @@ services:
         condition: service_healthy
     restart: on-failure
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+        SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/cinema
+        SPRING_DATASOURCE_USERNAME: root
+        SPRING_DATASOURCE_PASSWORD: root
+
+        JWT_SECRET: VerySecretKeyVerySecretKeyVerySecretKeyVerySecretKey
+        JWT_EXPIRATION: 86400000
